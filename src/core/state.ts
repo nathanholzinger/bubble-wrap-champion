@@ -2,6 +2,7 @@ import { ResourceMap, makeResourceMap } from './resources';
 import { Config } from './config';
 import { UpgradeId } from './upgrades';
 import { TradeId } from './trades';
+import { devOverrides } from './devOverrides';
 
 export interface BubbleCell {
   el: HTMLElement;
@@ -45,8 +46,17 @@ export const state: GameState = {
   bubbles:          [],
 };
 
-// Grid dimensions driven by table upgrade count
+// Grid dimensions — driven by table upgrade count, overridable from dev panel
 export function gridDims(): SheetInstance {
+  if (devOverrides.tableSize !== null) {
+    return { cols: devOverrides.tableSize, rows: devOverrides.tableSize };
+  }
   const n = state.purchases['tableUpgrade'] ?? 0;
   return { cols: 4 + n, rows: 4 + n };
+}
+
+// Chair count — driven by purchases, overridable from dev panel
+export function effectiveChairCount(): number {
+  if (devOverrides.chairCount !== null) return devOverrides.chairCount;
+  return state.purchases['chairUpgrade'] ?? 0;
 }

@@ -1,8 +1,10 @@
 import './dev.css';
 import { getCircleClipPath, GRID_SIZES } from '../../features/bubble-sheet/circleClip';
 import { clearSave } from '../../persistence/save';
-import { state } from '../../core/state';
+import { state, gridDims } from '../../core/state';
+import { devOverrides } from '../../core/devOverrides';
 import { syncUI, dom } from '../stats-panel/stats';
+import { buildSheet, updateTableSize } from '../../features/bubble-sheet/sheet';
 import type { ResourceId } from '../../core/resources';
 import { onUpdate } from '../../core/loop';
 import { totalRate, registerProducer } from '../../core/producers';
@@ -58,6 +60,29 @@ function buildDevPanel(): void {
         <span class="dev-resource-label">&gt; O2/SEC</span>
         <input type="number" class="dev-number" id="devO2RateInput" min="0" value="0">
         <span class="dev-label-value" id="devO2Rate">0.00</span>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="dev-row">
+        <div class="dev-label">
+          <span>&gt; TABLE SIZE</span>
+          <span class="dev-label-value" id="devTableSizeVal">OFF</span>
+        </div>
+        <input class="dev-range" id="devTableSizeSlider" type="range" min="0" max="9" step="1" value="0">
+      </div>
+
+      <div class="dev-row">
+        <div class="dev-label">
+          <span>&gt; SHEET SIZE</span>
+          <span class="dev-label-value" id="devSheetSizeVal">OFF</span>
+        </div>
+        <input class="dev-range" id="devSheetSizeSlider" type="range" min="0" max="9" step="1" value="0">
+      </div>
+
+      <div class="dev-resource-row">
+        <span class="dev-resource-label">&gt; CHAIRS</span>
+        <input type="number" class="dev-number" id="devChairInput" min="0" max="4" placeholder="–">
       </div>
 
       <div class="stat-divider"></div>
@@ -119,6 +144,64 @@ function buildDevPanel(): void {
   maxStackRow.appendChild(maxStackLabel);
   maxStackRow.appendChild(maxStackInput);
   maxStackRow.appendChild(maxStackBtn);
+
+  // Table size slider — 0=off, 1-9 maps to size 4-12
+  const tableSizeSlider = panel.querySelector('#devTableSizeSlider') as HTMLInputElement;
+  const tableSizeVal    = panel.querySelector('#devTableSizeVal')    as HTMLElement;
+  tableSizeSlider.addEventListener('input', () => {
+    const v = parseInt(tableSizeSlider.value);
+    if (v === 0) {
+      devOverrides.tableSize = null;
+      tableSizeVal.textContent = 'OFF';
+    } else {
+      devOverrides.tableSize = v + 3;
+      tableSizeVal.textContent = String(v + 3);
+    }
+    updateTableSize();
+
+    // Re-clamp and rebuild sheet if the sheet override is active —
+    // table size takes priority, so sheet must not exceed the new table size.
+    if (devOverrides.sheetSize !== null) {
+      const tableSize = gridDims().cols;
+      const sv   = parseInt(sheetSizeSlider.value);
+      const size = Math.min(sv + 3, tableSize);
+      devOverrides.sheetSize       = size;
+      sheetSizeVal.textContent = String(size);
+      buildSheet({ cols: size, rows: size });
+    }
+
+    syncUI();
+  });
+
+  // Sheet size slider — 0=off, 1-9 maps to size 4-12, clamped to effective table size
+  const sheetSizeSlider = panel.querySelector('#devSheetSizeSlider') as HTMLInputElement;
+  const sheetSizeVal    = panel.querySelector('#devSheetSizeVal')    as HTMLElement;
+  sheetSizeSlider.addEventListener('input', () => {
+    const v = parseInt(sheetSizeSlider.value);
+    if (v === 0) {
+      devOverrides.sheetSize = null;
+      sheetSizeVal.textContent = 'OFF';
+      buildSheet();
+    } else {
+      const tableSize = gridDims().cols;
+      const size = Math.min(v + 3, tableSize);
+      devOverrides.sheetSize = size;
+      sheetSizeVal.textContent = String(size);
+      buildSheet({ cols: size, rows: size });
+    }
+  });
+
+  // Chair override input — blank=no override, 0-4=override effectiveChairCount
+  const chairInput = panel.querySelector('#devChairInput') as HTMLInputElement;
+  chairInput.addEventListener('input', () => {
+    const raw = chairInput.value.trim();
+    if (raw === '') {
+      devOverrides.chairCount = null;
+    } else {
+      devOverrides.chairCount = Math.max(0, Math.min(4, parseInt(raw) || 0));
+    }
+    syncUI();
+  });
 
   // O2/sec dev producer — input sets the rate, display shows the live total
   const o2RateInput = panel.querySelector('#devO2RateInput') as HTMLInputElement;

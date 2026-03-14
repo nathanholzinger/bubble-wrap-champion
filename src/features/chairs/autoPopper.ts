@@ -1,4 +1,4 @@
-import { state } from '../../core/state';
+import { state, effectiveChairCount } from '../../core/state';
 import { on } from '../../core/events';
 import { onUpdate } from '../../core/loop';
 import { popBubbleAt, popBubbleWorker } from '../bubble-sheet/sheet';
@@ -116,7 +116,7 @@ function popNext(pos: ChairPos): void {
 }
 
 function tick(dt: number): void {
-  const count = state.purchases['chairUpgrade'] ?? 0;
+  const count = effectiveChairCount();
   if (count === 0) return;
 
   for (let i = 0; i < POSITIONS.length && i < count; i++) {

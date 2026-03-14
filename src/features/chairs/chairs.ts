@@ -1,5 +1,5 @@
 import './chairs.css';
-import { state } from '../../core/state';
+import { effectiveChairCount } from '../../core/state';
 
 // Purchase order → position (1st=south, 2nd=north, 3rd=east, 4th=west)
 const POSITIONS = ['south', 'north', 'east', 'west'] as const;
@@ -15,7 +15,7 @@ function createChair(pos: ChairPos): HTMLElement {
 }
 
 export function updateChairs(): void {
-  const count = state.purchases['chairUpgrade'] ?? 0;
+  const count = effectiveChairCount();
   POSITIONS.forEach((pos, i) => {
     const exists      = !!chairEls[pos];
     const shouldExist = i < count;
