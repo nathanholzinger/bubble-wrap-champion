@@ -11,6 +11,7 @@ import { openStore } from './features/store/store';
 import { getCircleClipPath } from './features/bubble-sheet/circleClip';
 import { startLoop, onUpdate } from './core/loop';
 import { tick as producerTick } from './core/producers';
+import { tickPopup } from './features/chairs/chairs';
 import { state } from './core/state';
 import { Config } from './core/config';
 import { showIntro } from './ui/intro/intro';
@@ -51,6 +52,7 @@ async function main(): Promise<void> {
 
   // Register tick systems then start the loop
   onUpdate(producerTick);
+  onUpdate(tickPopup);
   startLoop();
 
   // Build the sheet DOM using saved dims (or current table size for a new game),

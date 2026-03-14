@@ -3,10 +3,23 @@ import { on } from '../../core/events';
 import { onUpdate } from '../../core/loop';
 import { popBubbleAt, popBubbleWorker } from '../bubble-sheet/sheet';
 
-const POP_RATE = 2; // pops per second per chair
+export const POP_RATE = 2; // pops per second per chair
 
 const POSITIONS = ['south', 'north', 'east', 'west'] as const;
 type ChairPos = typeof POSITIONS[number];
+
+export interface ChairStats {
+  totalPops:  number;
+  playerPops: number;
+  workerPops: number;
+}
+
+export const chairStats: Record<ChairPos, ChairStats> = {
+  south: { totalPops: 0, playerPops: 0, workerPops: 0 },
+  north: { totalPops: 0, playerPops: 0, workerPops: 0 },
+  east:  { totalPops: 0, playerPops: 0, workerPops: 0 },
+  west:  { totalPops: 0, playerPops: 0, workerPops: 0 },
+};
 
 // Traversal order: array of bubble indices in the order each chair pops them
 type Orders = Record<ChairPos, number[]>;
@@ -111,9 +124,12 @@ function popNext(pos: ChairPos): void {
     if (!state.bubbles[idx]?.popped) {
       if (workerTurn[pos]) {
         popBubbleWorker(idx, pos);
+        chairStats[pos].workerPops++;
       } else {
         popBubbleAt(idx);
+        chairStats[pos].playerPops++;
       }
+      chairStats[pos].totalPops++;
       workerTurn[pos] = !workerTurn[pos];
       break;
     }

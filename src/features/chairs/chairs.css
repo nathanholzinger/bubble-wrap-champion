@@ -12,8 +12,13 @@
   border-right:  var(--px) solid #2E1A0A;
   border-bottom: var(--px) solid #2E1A0A;
   outline: var(--px) solid #3D2209;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   z-index: 1;
+}
+
+.chair:hover {
+  filter: brightness(1.25);
 }
 
 /* Cushion highlight pixel in corner */
@@ -67,6 +72,70 @@
 .chair--east::before {
   right: 0; top: 0; bottom: 0; width: 14px;
   border-left: var(--px) solid #8B5533;
+}
+
+/* ================================================
+   CHAIR POPUP
+================================================ */
+.chair-popup {
+  position: fixed;
+  z-index: 9000;
+  background: rgb(var(--panel-r), var(--panel-g), var(--panel-b));
+  border-top:    var(--px) solid var(--c5);
+  border-left:   var(--px) solid var(--c5);
+  border-right:  var(--px) solid var(--c1);
+  border-bottom: var(--px) solid var(--c1);
+  outline: var(--px) solid var(--c0);
+  padding: 10px 12px;
+  min-width: 220px;
+  pointer-events: none;
+}
+
+.chair-popup-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  color: var(--text-bright);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.chair-popup-divider {
+  height: var(--px);
+  background: var(--c3);
+  box-shadow: 0 var(--px) 0 var(--c5);
+  margin: 6px 0;
+}
+
+.chair-popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: 'Press Start 2P', monospace;
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+
+.chair-popup-row.main {
+  font-size: 0.38rem;
+  color: var(--text-bright);
+  margin-bottom: 2px;
+}
+
+.chair-popup-row.sub {
+  font-size: 0.3rem;
+  color: var(--text-dim);
+  margin-bottom: 1px;
+}
+
+.chair-popup-row span {
+  color: var(--cW);
+  font-family: 'VT323', monospace;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.chair-popup-row.sub span {
+  font-size: 0.75rem;
 }
 
 /* West chair — left of table; backrest strip at left (far from table) */
