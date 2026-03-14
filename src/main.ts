@@ -24,7 +24,7 @@ initSave();
 // Rehydrate persistent state before buildSheet resets it
 const savedData = load();
 if (savedData) {
-  state.oxygen   = savedData.oxygen;
+  Object.assign(state.resources, savedData.resources);
   state.sheets   = savedData.sheets;
   state.sheetNum = savedData.sheetNum;
 }

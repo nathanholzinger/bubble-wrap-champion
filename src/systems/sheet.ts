@@ -51,7 +51,7 @@ function popBubble(i: number, el: HTMLElement): void {
   el.classList.add('popped', 'just-popped');
   setTimeout(() => el.classList.remove('just-popped'), Config.animation.popFlashMs);
 
-  state.oxygen++;
+  state.resources.oxygen++;
   state.popped++;
 
   const r = el.getBoundingClientRect();

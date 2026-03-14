@@ -1,9 +1,9 @@
 import { state, GRID } from './state';
 import { on } from './events';
 import { Config } from './config';
+import { RESOURCES, ResourceId } from './resources';
 
 export interface DomRefs {
-  oxygenEl:    HTMLElement;
   sheetsEl:    HTMLElement;
   sheetNumA:   HTMLElement;
   sheetNumB:   HTMLElement;
@@ -16,6 +16,9 @@ export interface DomRefs {
   milBar:      HTMLElement;
 }
 
+// Populated during init() from the resource registry
+const resourceEls: Partial<Record<ResourceId, HTMLElement>> = {};
+
 function getEl(id: string): HTMLElement {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Element #${id} not found`);
@@ -23,7 +26,6 @@ function getEl(id: string): HTMLElement {
 }
 
 export const dom: DomRefs = {
-  oxygenEl:    getEl('oxygenCount'),
   sheetsEl:    getEl('sheetsCount'),
   sheetNumA:   getEl('sheetNum'),
   sheetNumB:   getEl('sheetNumLabel'),
@@ -37,9 +39,12 @@ export const dom: DomRefs = {
 };
 
 export function init(): void {
+  buildResourceRows();
+
   on('bubble:popped', ({ x, y }) => {
     spawnParticle(x, y);
-    flashStat(dom.oxygenEl);
+    const oxygenEl = resourceEls['oxygen'];
+    if (oxygenEl) flashStat(oxygenEl);
     updateUI();
   });
 
@@ -73,8 +78,39 @@ export function syncUI(): void {
   }
 }
 
+// ── Internal ─────────────────────────────────────────────────────────────────
+
+function buildResourceRows(): void {
+  const container = getEl('resourceStats');
+  for (const { id, label } of RESOURCES) {
+    const row = document.createElement('div');
+    row.className = 'stat-row';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'stat-label';
+    lbl.textContent = '> ' + label;
+
+    const val = document.createElement('div');
+    val.className = 'stat-value';
+    val.textContent = '0';
+
+    row.appendChild(lbl);
+    row.appendChild(val);
+    container.appendChild(row);
+
+    const divider = document.createElement('div');
+    divider.className = 'stat-divider';
+    container.appendChild(divider);
+
+    resourceEls[id] = val;
+  }
+}
+
 function updateUI(): void {
-  dom.oxygenEl.textContent    = fmt(state.oxygen);
+  for (const { id } of RESOURCES) {
+    const el = resourceEls[id];
+    if (el) el.textContent = fmt(state.resources[id]);
+  }
   dom.sheetsEl.textContent    = fmt(state.sheets);
   dom.bubbleCntEl.textContent = pad2(state.popped) + '/' + GRID;
 

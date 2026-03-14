@@ -17,12 +17,11 @@ interface MilestoneDefinition {
 const MILESTONES: MilestoneDefinition[] = [
   // Pop count
   { trigger: 'oxygen', threshold: 10,   message: '10 POPS — YOU HAVE THE TOUCH' },
-  { trigger: 'oxygen', threshold: 25,   message: '25 POPS — BUBBLE NOVICE' },
-  { trigger: 'oxygen', threshold: 50,   message: '50 POPS — GETTING SERIOUS' },
-  { trigger: 'oxygen', threshold: 100,  message: '100 POPS — CENTURY ACHIEVED' },
-  { trigger: 'oxygen', threshold: 250,  message: '250 POPS — BUBBLE ADEPT' },
-  { trigger: 'oxygen', threshold: 500,  message: '500 POPS — BUBBLE VETERAN' },
-  { trigger: 'oxygen', threshold: 1000, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
+  { trigger: 'oxygen', threshold: 100,   message: '25 POPS — BUBBLE NOVICE' },
+  { trigger: 'oxygen', threshold: 1000,   message: '50 POPS — GETTING SERIOUS' },
+  { trigger: 'oxygen', threshold: 10000,  message: '250 POPS — BUBBLE ADEPT' },
+  { trigger: 'oxygen', threshold: 100000,  message: '500 POPS — BUBBLE VETERAN' },
+  { trigger: 'oxygen', threshold: 1000000, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
 
   // Sheet count
   { trigger: 'sheets', threshold: 1,    message: '1 SHEET — FIRST STEPS' },
@@ -42,7 +41,7 @@ const shown = new Set<string>();
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 export function init(): void {
-  on('bubble:popped',  () => check('oxygen', state.oxygen));
+  on('bubble:popped',  () => check('oxygen', state.resources.oxygen));
   on('sheet:complete', () => check('sheets', state.sheets));
 }
 

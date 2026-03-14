@@ -1,12 +1,13 @@
 import { state } from './state';
 import { on } from './events';
 import { Config } from './config';
+import { ResourceMap } from './resources';
 
 const { key: SAVE_KEY, version: SAVE_VERSION } = Config.save;
 
 export interface SaveData {
   version:       number;
-  oxygen:        number;
+  resources:     ResourceMap;
   sheets:        number;
   sheetNum:      number;
   poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
@@ -15,7 +16,7 @@ export interface SaveData {
 export function save(): void {
   const data: SaveData = {
     version:       SAVE_VERSION,
-    oxygen:        state.oxygen,
+    resources:     { ...state.resources },
     sheets:        state.sheets,
     sheetNum:      state.sheetNum,
     poppedBubbles: state.bubbles.map(b => b.popped),
