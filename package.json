@@ -1,0 +1,29 @@
+{
+  "name": "bubble-wrap-champion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanholzinger/bubble-wrap-champion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/nathanholzinger/bubble-wrap-champion/issues"
+  },
+  "homepage": "https://github.com/nathanholzinger/bubble-wrap-champion#readme",
+  "devDependencies": {
+    "vite": "^8.0.0"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
+}

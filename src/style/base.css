@@ -1,0 +1,111 @@
+/* ================================================
+   COLOR SYSTEM
+   Fully greyscale now. In the future, Roxygen,
+   Goxygen, and Bloxygen will unlock --r, --g, --b
+   channel contributions and tint the palette.
+================================================ */
+:root {
+  /* Future RGB channel weights (0-255) — locked at 0 for now */
+  --r: 0;
+  --g: 0;
+  --b: 0;
+
+  /* 8-bit greyscale palette — 10 distinct steps */
+  --c0: #080808;
+  --c1: #181818;
+  --c2: #282828;
+  --c3: #383838;
+  --c4: #505050;
+  --c5: #707070;
+  --c6: #909090;
+  --c7: #b8b8b8;
+  --c8: #d8d8d8;
+  --c9: #ececec;
+  --cW: #f8f8f8;
+
+  --px: 3px;
+
+  /* Circle fidelity: 1 = cross (3×3 pixel grid), 10 = fine circle (62×62).
+     --bubble-clip is computed from this value in main.js on startup.      */
+  --circle-fidelity: 3;
+
+  --bg:           var(--c1);
+  --panel-bg:     var(--c2);
+  --sheet-bg:     var(--c2);
+  --bubble-face:  var(--c7);
+  --bubble-hi:    var(--cW);
+  --bubble-lo:    var(--c2);
+  --bubble-pop:   var(--c3);
+  --btn-face:     var(--c6);
+  --btn-hi:       var(--cW);
+  --btn-lo:       var(--c1);
+  --btn-dis:      var(--c3);
+  --text-bright:  var(--cW);
+  --text-mid:     var(--c7);
+  --text-dim:     var(--c5);
+  --scanline:     rgba(0,0,0,0.20);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--c0); }
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text-bright);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  padding-bottom: 36px;
+}
+
+/* CRT scanlines */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 2px,
+    var(--scanline) 2px, var(--scanline) 4px
+  );
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* CRT vignette */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%);
+  pointer-events: none;
+  z-index: 9001;
+}
+
+/* ================================================
+   8-BIT BORDER UTILITIES
+================================================ */
+.raised {
+  border-top:    var(--px) solid var(--c8);
+  border-left:   var(--px) solid var(--c8);
+  border-right:  var(--px) solid var(--c1);
+  border-bottom: var(--px) solid var(--c1);
+  outline: var(--px) solid var(--c0);
+}
+
+.sunken {
+  border-top:    var(--px) solid var(--c1);
+  border-left:   var(--px) solid var(--c1);
+  border-right:  var(--px) solid var(--c8);
+  border-bottom: var(--px) solid var(--c8);
+  outline: var(--px) solid var(--c0);
+}
+
+/* ================================================
+   TYPOGRAPHY ANIMATIONS
+================================================ */
+.blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }

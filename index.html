@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Wrap Champion</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="milestone-bar" id="milestoneBanner"></div>
+
+<header>
+  <div class="title-box raised">
+    <h1>&gt;&gt; BUBBLE WRAP CHAMPION &lt;&lt;</h1>
+  </div>
+  <div class="subtitle">OXYGEN AWAITS<span class="blink">_</span></div>
+</header>
+
+<div class="game-layout">
+
+  <!-- Stats Panel -->
+  <div class="stats-panel raised">
+    <div class="win-titlebar">
+      <span class="win-title">STATS.EXE</span>
+      <div class="win-btns"><div class="win-btn"></div><div class="win-btn"></div></div>
+    </div>
+    <div class="panel-body">
+
+      <div class="stat-row">
+        <div class="stat-label">&gt; OXYGEN</div>
+        <div class="stat-value" id="oxygenCount">0</div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-row">
+        <div class="stat-label">&gt; SHEETS DONE</div>
+        <div class="stat-value" id="sheetsCount">0</div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-row">
+        <div class="stat-label">&gt; SHEET #</div>
+        <div class="stat-value" id="sheetNum">1</div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-row">
+        <div class="stat-label">&gt; THIS SHEET</div>
+        <div class="stat-value" id="bubbleCount">00/16</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div class="game-area">
+
+    <div class="sheet-wrapper">
+      <div class="stack-bg stack-bg-2"></div>
+      <div class="stack-bg stack-bg-1"></div>
+
+      <div class="bubble-sheet raised" id="bubbleSheet">
+        <div class="sheet-header">&gt; SHEET #<span id="sheetNumLabel">1</span> // POP ALL 16 BUBBLES</div>
+        <div class="bubble-grid" id="bubbleGrid"></div>
+
+        <div class="sheet-done" id="sheetDone">
+          <div class="done-title">ALL BUBBLES<br>POPPED!</div>
+          <div class="done-hint">&gt; GRAB NEW SHEET &lt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="prog-wrap">
+      <div class="prog-labels">
+        <span>&gt; SHEET PROGRESS</span>
+        <span id="progText">0%</span>
+      </div>
+      <div class="prog-track sunken">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Stack Button -->
+    <div class="btn-area">
+      <button class="stack-btn" id="stackBtn" disabled>
+        [ GRAB NEW SHEET ]
+      </button>
+      <div class="btn-hint" id="btnHint">POP ALL BUBBLES FIRST</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom ticker -->
+<div class="ticker">
+  <span class="ticker-inner">
+    * BUBBLE WRAP CHAMPION * &nbsp;&nbsp;&nbsp; POP BUBBLES TO COLLECT OXYGEN &nbsp;&nbsp;&nbsp;
+    COMING SOON: ROXYGEN // GOXYGEN // BLOXYGEN &nbsp;&nbsp;&nbsp;
+    COMPLETE SHEETS FOR MAXIMUM EFFICIENCY &nbsp;&nbsp;&nbsp;
+    * BUBBLE WRAP CHAMPION *
+  </span>
+</div>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

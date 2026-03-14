@@ -1,0 +1,111 @@
+/* ================================================
+   DEV PANEL
+================================================ */
+.dev-panel {
+  position: fixed;
+  bottom: 36px; /* sit above the ticker */
+  right: 12px;
+  z-index: 8000;
+  min-width: 200px;
+  background: var(--panel-bg);
+}
+
+.dev-panel .win-titlebar {
+  background: var(--c3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dev-panel .win-title {
+  color: var(--c7);
+}
+
+.dev-panel-body {
+  padding: 12px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  max-height: 300px;
+  transition: max-height 0.15s steps(6), padding 0.15s steps(6);
+}
+
+.dev-panel-body.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ================================================
+   DEV CONTROLS
+================================================ */
+.dev-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dev-label {
+  font-size: 0.36rem;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dev-label-value {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+/* Range slider — styled to match the 8-bit aesthetic */
+.dev-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background: var(--c1);
+  border-top:    var(--px) solid var(--c1);
+  border-left:   var(--px) solid var(--c1);
+  border-right:  var(--px) solid var(--c6);
+  border-bottom: var(--px) solid var(--c6);
+  outline: var(--px) solid var(--c0);
+  cursor: pointer;
+}
+
+.dev-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 18px;
+  background: var(--c7);
+  border-top:    var(--px) solid var(--cW);
+  border-left:   var(--px) solid var(--cW);
+  border-right:  var(--px) solid var(--c2);
+  border-bottom: var(--px) solid var(--c2);
+  outline: var(--px) solid var(--c0);
+  cursor: pointer;
+}
+
+.dev-range::-moz-range-thumb {
+  width: 14px;
+  height: 18px;
+  background: var(--c7);
+  border-top:    var(--px) solid var(--cW);
+  border-left:   var(--px) solid var(--cW);
+  border-right:  var(--px) solid var(--c2);
+  border-bottom: var(--px) solid var(--c2);
+  outline: var(--px) solid var(--c0);
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.dev-range::-webkit-slider-thumb:active {
+  border-top-color:    var(--c2);
+  border-left-color:   var(--c2);
+  border-right-color:  var(--cW);
+  border-bottom-color: var(--cW);
+}
