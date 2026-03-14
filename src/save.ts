@@ -23,7 +23,13 @@ export function save(): void {
     sheetsInStack: state.sheetsInStack,
     poppedBubbles: state.bubbles.map(b => b.popped),
   };
-  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  localStorage.setItem(SAVE_KEY, stringifyWithBigInt(data));
+}
+
+function stringifyWithBigInt(data: SaveData): string {
+  return JSON.stringify(data, (_, value) =>
+    typeof value === 'bigint' ? value.toString() + 'n' : value
+  );
 }
 
 export function load(): SaveData | null {
