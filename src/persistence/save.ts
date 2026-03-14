@@ -95,8 +95,9 @@ export function clearSave(): void {
 
 // Subscribe to events so saves happen automatically
 export function init(): void {
-  on('bubble:popped',   save);
-  on('sheet:complete',  save);
-  on('sheet:new',       save);
-  on('stack:restocked', save);
+  on('bubble:popped',        save);
+  on('bubble:worker_popped', save);
+  on('sheet:complete',       save);
+  on('sheet:new',            save);
+  on('stack:restocked',      save);
 }

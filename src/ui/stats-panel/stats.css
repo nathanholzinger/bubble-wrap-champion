@@ -61,3 +61,9 @@
   70%  { transform: translateY(-32px);opacity: 1; }
   100% { transform: translateY(-48px);opacity: 0; }
 }
+
+/* Worker particle — sucked toward chair via JS animate(), no CSS rise */
+.pop-particle--worker {
+  animation: none;
+  color: var(--c5);
+}

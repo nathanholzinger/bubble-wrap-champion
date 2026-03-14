@@ -3,6 +3,7 @@ import './style/layout.css';
 
 import './ui/dev-panel/dev';
 import { init as initUI, syncUI } from './ui/stats-panel/stats';
+import { initAutoPoppers } from './features/chairs/autoPopper';
 import { init as initMilestones } from './features/milestones/milestones';
 import { init as initSave, load } from './persistence/save';
 import { buildSheet, grabNewSheet, restoreBubbles } from './features/bubble-sheet/sheet';
@@ -29,6 +30,7 @@ async function main(): Promise<void> {
   initUI();
   initMilestones();
   initSave();
+  initAutoPoppers();
 
   // Rehydrate persistent state before buildSheet resets it
   if (savedData) {

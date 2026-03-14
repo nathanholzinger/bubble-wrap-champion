@@ -48,6 +48,11 @@ export function init(): void {
     updateUI();
   });
 
+  on('bubble:worker_popped', ({ x, y, chairPos }) => {
+    spawnWorkerParticle(x, y, chairPos);
+    updateUI();
+  });
+
   on('sheet:complete', () => {
     dom.sheetDone.classList.add('show');
     updateButtons();
@@ -158,6 +163,32 @@ function spawnParticle(x: number, y: number): void {
   p.style.left  = (x - offsetX) + 'px';
   p.style.top   = (y - offsetY) + 'px';
   document.body.appendChild(p);
+  setTimeout(() => p.remove(), lifetimeMs);
+}
+
+function spawnWorkerParticle(x: number, y: number, chairPos: string): void {
+  const p = document.createElement('div');
+  p.className = 'pop-particle pop-particle--worker';
+  const { text, offsetX, offsetY, lifetimeMs } = Config.bubbles.particle;
+  p.textContent = text;
+  p.style.left  = (x - offsetX) + 'px';
+  p.style.top   = (y - offsetY) + 'px';
+  document.body.appendChild(p);
+
+  const chairEl = document.querySelector(`.chair--${chairPos}`);
+  if (chairEl) {
+    const cr  = chairEl.getBoundingClientRect();
+    const dx  = (cr.left + cr.width  / 2) - (x - offsetX);
+    const dy  = (cr.top  + cr.height / 2) - (y - offsetY);
+    p.animate(
+      [
+        { transform: 'translate(0,0) scale(1)',    opacity: 1 },
+        { transform: `translate(${dx}px,${dy}px) scale(0.2)`, opacity: 0 },
+      ],
+      { duration: lifetimeMs, easing: 'ease-in', fill: 'forwards' },
+    );
+  }
+
   setTimeout(() => p.remove(), lifetimeMs);
 }
 

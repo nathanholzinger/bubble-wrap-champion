@@ -45,7 +45,7 @@ export function buildSheet(dims?: SheetInstance): void {
     x.className = 'px-x';
     el.appendChild(x);
 
-    el.addEventListener('click', () => popBubble(i, el));
+    el.addEventListener('click', () => popBubble(i));
     grid.appendChild(el);
     state.bubbles.push({ el, popped: false });
   }
@@ -80,20 +80,38 @@ export function restockSheets(): void {
   emit('stack:restocked');
 }
 
-function popBubble(i: number, el: HTMLElement): void {
-  if (state.bubbles[i].popped) return;
+// Shared mechanical pop — marks bubble, updates popped count, checks completion.
+// Does NOT award oxygen or emit any event (callers do that).
+function doPop(i: number): { x: number; y: number } {
+  const { el } = state.bubbles[i];
   state.bubbles[i].popped = true;
-
   el.classList.add('popped', 'just-popped');
   setTimeout(() => el.classList.remove('just-popped'), Config.animation.popFlashMs);
-
-  state.resources.oxygen += 1n;
   state.popped++;
-
   const r = el.getBoundingClientRect();
-  emit('bubble:popped', { x: r.left + r.width / 2, y: r.top });
-
   if (state.popped === state.gridTotal) onSheetComplete();
+  return { x: r.left + r.width / 2, y: r.top };
+}
+
+// Player pop — awards oxygen, emits bubble:popped
+export function popBubbleAt(i: number): void {
+  if (i < 0 || i >= state.bubbles.length) return;
+  if (state.bubbles[i].popped) return;
+  state.resources.oxygen += 1n;
+  const pos = doPop(i);
+  emit('bubble:popped', pos);
+}
+
+// Worker pop — no oxygen for the player, emits bubble:worker_popped
+export function popBubbleWorker(i: number, chairPos: string): void {
+  if (i < 0 || i >= state.bubbles.length) return;
+  if (state.bubbles[i].popped) return;
+  const pos = doPop(i);
+  emit('bubble:worker_popped', { ...pos, chairPos });
+}
+
+function popBubble(i: number): void {
+  popBubbleAt(i);
 }
 
 function onSheetComplete(): void {
