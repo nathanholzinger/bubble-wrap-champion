@@ -41,7 +41,7 @@ const shown = new Set<string>();
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 export function init(): void {
-  on('bubble:popped',  () => check('oxygen', state.resources.oxygen));
+  on('bubble:popped',  () => check('oxygen', Number(state.resources.oxygen)));
   on('sheet:complete', () => check('sheets', state.sheets));
 }
 

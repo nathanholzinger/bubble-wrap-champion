@@ -19,9 +19,9 @@ function lerp(a: number, b: number, t: number): number {
 const ROOT = document.documentElement;
 
 export function updateColors(): void {
-  const r = satFraction(state.resources.roxygen);
-  const g = satFraction(state.resources.goxygen);
-  const b = satFraction(state.resources.bloxygen);
+  const r = satFraction(Number(state.resources.roxygen));
+  const g = satFraction(Number(state.resources.goxygen));
+  const b = satFraction(Number(state.resources.bloxygen));
 
   // Banner → red tint (roxygen)
   ROOT.style.setProperty('--banner-r', String(lerp(BASE_BANNER, 255, r)));
