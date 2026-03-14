@@ -2,7 +2,7 @@ import './dev.css';
 import { getCircleClipPath, GRID_SIZES } from '../../features/bubble-sheet/circleClip';
 import { clearSave } from '../../persistence/save';
 import { state } from '../../core/state';
-import { syncUI } from '../stats-panel/stats';
+import { syncUI, dom } from '../stats-panel/stats';
 import type { ResourceId } from '../../core/resources';
 
 const DEV_RESOURCES: ResourceId[] = ['oxygen', 'roxygen', 'bloxygen', 'goxygen'];
@@ -43,6 +43,10 @@ function buildDevPanel(): void {
 
       <div class="stat-divider"></div>
 
+      <div class="dev-resource-row" id="devMaxStackRow"></div>
+
+      <div class="stat-divider"></div>
+
       <div class="dev-row">
         <button class="stack-btn" id="devClearSave">[ CLEAR SAVE ]</button>
       </div>
@@ -74,6 +78,33 @@ function buildDevPanel(): void {
     location.reload();
   });
 
+  // Max stack size control
+  const maxStackRow = panel.querySelector('#devMaxStackRow') as HTMLElement;
+
+  const maxStackLabel = document.createElement('span');
+  maxStackLabel.className = 'dev-resource-label';
+  maxStackLabel.textContent = '> STACK SIZE';
+
+  const maxStackInput = document.createElement('input');
+  maxStackInput.type      = 'number';
+  maxStackInput.className = 'dev-number';
+  maxStackInput.min       = '1';
+
+  const maxStackBtn = document.createElement('button');
+  maxStackBtn.className   = 'dev-add-btn';
+  maxStackBtn.textContent = '[ SET ]';
+  maxStackBtn.addEventListener('click', () => {
+    const val = parseInt(maxStackInput.value);
+    if (val > 0) {
+      state.maxStackSize = val;
+      dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
+    }
+  });
+
+  maxStackRow.appendChild(maxStackLabel);
+  maxStackRow.appendChild(maxStackInput);
+  maxStackRow.appendChild(maxStackBtn);
+
   // Resource injection rows
   const resourcesContainer = panel.querySelector('#devResources') as HTMLElement;
   for (const id of DEV_RESOURCES) {
@@ -93,9 +124,10 @@ function buildDevPanel(): void {
     btn.className   = 'dev-add-btn';
     btn.textContent = '[ ADD ]';
     btn.addEventListener('click', () => {
-      const amount = parseInt(input.value) || 0;
-      if (amount > 0) {
-        state.resources[id] += BigInt(amount);
+      const amount = BigInt(input.value) || 0n;
+
+      if (amount > 0n) {
+        state.resources[id] += amount;
         syncUI();
       }
     });

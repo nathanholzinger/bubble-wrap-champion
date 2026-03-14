@@ -6,7 +6,7 @@
   bottom: 36px; /* sit above the ticker */
   right: 12px;
   z-index: 8000;
-  min-width: 200px;
+  min-width: 240px;
   background: var(--panel-bg);
 }
 

@@ -31,7 +31,7 @@ export const Config = {
   },
 
   stack: {
-    size: 4,  // sheets available per store run (also the starting supply)
+    startingStackSize: 4,
   },
 
   save: {

@@ -47,7 +47,7 @@ export function grabNewSheet(): void {
 }
 
 export function restockSheets(): void {
-  state.sheets = Config.stack.size;
+  state.sheets = state.maxStackSize;
   emit('stack:restocked');
 }
 

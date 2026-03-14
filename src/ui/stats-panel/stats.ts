@@ -59,6 +59,7 @@ export function init(): void {
   on('sheet:new', () => {
     dom.sheetDone.classList.remove('show');
     dom.stackBtn.disabled = true;
+    dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
     dom.storeBtn.disabled = true;
     dom.btnHint.textContent = 'POP ALL BUBBLES FIRST';
     updateUI();
@@ -128,6 +129,7 @@ function updateButtons(): void {
   const hasSheets = state.sheets > 0;
 
   dom.stackBtn.disabled = !(sheetDone && hasSheets);
+  dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
   dom.storeBtn.disabled = !(sheetDone && !hasSheets);
   dom.btnHint.textContent = !sheetDone
     ? 'POP ALL BUBBLES FIRST'
