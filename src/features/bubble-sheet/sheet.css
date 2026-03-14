@@ -4,6 +4,23 @@
 .sheet-wrapper {
   position: relative;
   margin-bottom: 10px;
+  isolation: isolate; /* own stacking context so table-surface z-index: -1 stays visible */
+}
+
+/* Table surface behind everything — grows automatically with the sheet */
+.table-surface {
+  position: absolute;
+  top: -20px;
+  left: -28px;
+  right: -28px;
+  bottom: -36px;
+  z-index: -2;
+  background: #5C3317;
+  border-top:    var(--px) solid #8B5533;
+  border-left:   var(--px) solid #8B5533;
+  border-right:  var(--px) solid #2E1A0A;
+  border-bottom: var(--px) solid #2E1A0A;
+  outline: var(--px) solid #3D2209;
 }
 
 /* Paper stack layers behind sheet */
@@ -36,7 +53,6 @@
 ================================================ */
 .bubble-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 9px;
 }
 

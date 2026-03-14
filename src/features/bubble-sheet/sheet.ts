@@ -1,18 +1,25 @@
 import './sheet.css';
-import { state, GRID } from '../../core/state';
+import { state, gridDims } from '../../core/state';
 import { emit } from '../../core/events';
 import { Config } from '../../core/config';
 
 // Sheet owns its grid element directly — no stats.ts import needed
-const grid = document.getElementById('bubbleGrid')!;
+const grid   = document.getElementById('bubbleGrid')! as HTMLElement;
+const header = document.querySelector('.sheet-header')! as HTMLElement;
 
 export function buildSheet(): void {
-  state.popped  = 0;
-  state.bubbles = [];
+  const { cols, rows } = gridDims();
+  const total = cols * rows;
+  state.gridTotal = total;
+  state.popped    = 0;
+  state.bubbles   = [];
+
   grid.innerHTML = '';
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  header.textContent = `> POP ALL ${total} BUBBLES`;
   emit('sheet:new');
 
-  for (let i = 0; i < GRID; i++) {
+  for (let i = 0; i < total; i++) {
     const el = document.createElement('div');
     el.className = 'bubble';
 
@@ -40,7 +47,7 @@ export function restoreBubbles(poppedBubbles: boolean[]): void {
 }
 
 export function grabNewSheet(): void {
-  if (state.popped < GRID) return;
+  if (state.popped < state.gridTotal) return;
   if (state.sheets === 0) return;
   state.sheets--;
   buildSheet();
@@ -64,7 +71,7 @@ function popBubble(i: number, el: HTMLElement): void {
   const r = el.getBoundingClientRect();
   emit('bubble:popped', { x: r.left + r.width / 2, y: r.top });
 
-  if (state.popped === GRID) onSheetComplete();
+  if (state.popped === state.gridTotal) onSheetComplete();
 }
 
 function onSheetComplete(): void {

@@ -5,7 +5,8 @@ import './ui/dev-panel/dev';
 import { init as initUI, syncUI } from './ui/stats-panel/stats';
 import { init as initMilestones } from './features/milestones/milestones';
 import { init as initSave, load } from './persistence/save';
-import { buildSheet, grabNewSheet, restockSheets, restoreBubbles } from './features/bubble-sheet/sheet';
+import { buildSheet, grabNewSheet, restoreBubbles } from './features/bubble-sheet/sheet';
+import { openStore } from './features/store/store';
 import { getCircleClipPath } from './features/bubble-sheet/circleClip';
 import { startLoop } from './core/loop';
 import { state } from './core/state';
@@ -33,11 +34,14 @@ async function main(): Promise<void> {
     Object.assign(state.resources, savedData.resources);
     state.completedSheets = savedData.sheets;
     state.sheets          = savedData.sheetsInStack;
+    state.maxStackSize    = savedData.maxStackSize;
+    state.woodBought      = savedData.woodBought;
+    state.tableUpgrades   = savedData.tableUpgrades;
   }
 
   // Wire up sheet buttons
   document.getElementById('stackBtn')!.addEventListener('click', grabNewSheet);
-  document.getElementById('storeBtn')!.addEventListener('click', restockSheets);
+  document.getElementById('storeBtn')!.addEventListener('click', openStore);
 
   // Start the game loop
   startLoop();

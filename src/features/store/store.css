@@ -1,0 +1,62 @@
+/* ================================================
+   STORE MODAL
+================================================ */
+.store-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 6000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.store-overlay.hidden {
+  display: none;
+}
+
+.store-window {
+  min-width: 300px;
+}
+
+.store-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ================================================
+   STORE ITEMS
+================================================ */
+.store-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.store-item-header {
+  font-size: 0.36rem;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.store-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.store-item-cost {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.store-divider {
+  border: none;
+  border-top: var(--px) solid var(--c4);
+  margin: 0;
+}

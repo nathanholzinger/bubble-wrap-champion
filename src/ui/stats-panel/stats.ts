@@ -1,5 +1,5 @@
 import './stats.css';
-import { state, GRID } from '../../core/state';
+import { state } from '../../core/state';
 import { on } from '../../core/events';
 import { Config } from '../../core/config';
 import { RESOURCES, ResourceId } from '../../core/resources';
@@ -10,7 +10,6 @@ export interface DomRefs {
   progFill:  HTMLElement;
   progText:  HTMLElement;
   stackBtn:  HTMLButtonElement;
-  storeBtn:  HTMLButtonElement;
   btnHint:   HTMLElement;
   sheetDone: HTMLElement;
   milBar:    HTMLElement;
@@ -30,7 +29,6 @@ export const dom: DomRefs = {
   progFill:  getEl('progFill'),
   progText:  getEl('progText'),
   stackBtn:  getEl('stackBtn') as HTMLButtonElement,
-  storeBtn:  getEl('storeBtn') as HTMLButtonElement,
   btnHint:   getEl('btnHint'),
   sheetDone: getEl('sheetDone'),
   milBar:    getEl('milestoneBanner'),
@@ -60,7 +58,6 @@ export function init(): void {
     dom.sheetDone.classList.remove('show');
     dom.stackBtn.disabled = true;
     dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
-    dom.storeBtn.disabled = true;
     dom.btnHint.textContent = 'POP ALL BUBBLES FIRST';
     updateUI();
   });
@@ -69,7 +66,7 @@ export function init(): void {
 // Forces a full UI sync from state — used after save restoration
 export function syncUI(): void {
   updateUI();
-  if (state.popped === GRID) {
+  if (state.popped === state.gridTotal) {
     dom.sheetDone.classList.add('show');
     updateButtons();
   }
@@ -117,7 +114,7 @@ function updateUI(): void {
     }
   }
 
-  const pct = Math.round((state.popped / GRID) * 100);
+  const pct = Math.round((state.popped / state.gridTotal) * 100);
   dom.progFill.style.width = pct + '%';
   dom.progText.textContent = pct + '%';
 
@@ -125,12 +122,11 @@ function updateUI(): void {
 }
 
 function updateButtons(): void {
-  const sheetDone = state.popped === GRID;
+  const sheetDone = state.popped === state.gridTotal;
   const hasSheets = state.sheets > 0;
 
   dom.stackBtn.disabled = !(sheetDone && hasSheets);
   dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
-  dom.storeBtn.disabled = !(sheetDone && !hasSheets);
   dom.btnHint.textContent = !sheetDone
     ? 'POP ALL BUBBLES FIRST'
     : hasSheets

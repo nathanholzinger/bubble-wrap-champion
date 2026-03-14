@@ -36,7 +36,7 @@ export const Config = {
 
   save: {
     key:     'bwc_save',
-    version: 5,
+    version: 6,
     // Bump version whenever SaveData's shape changes — old saves will be discarded
   },
 

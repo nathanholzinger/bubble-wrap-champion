@@ -13,6 +13,9 @@ export interface SaveData {
   resources:     SerializedResources;
   sheets:        number;
   sheetsInStack: number;
+  maxStackSize:  number;
+  woodBought:    number;
+  tableUpgrades: number;
   poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
 }
 
@@ -34,12 +37,15 @@ export function save(): void {
     resources:     serializeResources(state.resources),
     sheets:        state.completedSheets,
     sheetsInStack: state.sheets,
+    maxStackSize:  state.maxStackSize,
+    woodBought:    state.woodBought,
+    tableUpgrades: state.tableUpgrades,
     poppedBubbles: state.bubbles.map(b => b.popped),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 
-export function load(): { resources: ResourceMap; sheets: number; sheetsInStack: number; poppedBubbles: boolean[] } | null {
+export function load(): { resources: ResourceMap; sheets: number; sheetsInStack: number; maxStackSize: number; woodBought: number; tableUpgrades: number; poppedBubbles: boolean[] } | null {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
@@ -50,6 +56,9 @@ export function load(): { resources: ResourceMap; sheets: number; sheetsInStack:
       resources:     deserializeResources(data.resources),
       sheets:        data.sheets,
       sheetsInStack: data.sheetsInStack,
+      maxStackSize:  data.maxStackSize,
+      woodBought:    data.woodBought,
+      tableUpgrades: data.tableUpgrades,
       poppedBubbles: data.poppedBubbles,
     };
   } catch {
