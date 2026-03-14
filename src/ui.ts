@@ -2,6 +2,7 @@ import { state, GRID } from './state';
 import { on } from './events';
 import { Config } from './config';
 import { RESOURCES, ResourceId } from './resources';
+import { updateColors } from './systems/color';
 
 export interface DomRefs {
   progFill:  HTMLElement;
@@ -116,6 +117,8 @@ function updateUI(): void {
   const pct = Math.round((state.popped / GRID) * 100);
   dom.progFill.style.width = pct + '%';
   dom.progText.textContent = pct + '%';
+
+  updateColors();
 }
 
 function updateButtons(): void {

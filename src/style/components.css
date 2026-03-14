@@ -9,7 +9,7 @@ header {
 
 .title-box {
   display: inline-block;
-  background: var(--c3);
+  background: rgb(var(--banner-r), var(--banner-g), var(--banner-b));
   padding: 12px 24px 10px;
 }
 
@@ -32,7 +32,7 @@ h1 {
    STATS PANEL
 ================================================ */
 .stats-panel {
-  background: var(--panel-bg);
+  background: rgb(var(--panel-r), var(--panel-g), var(--panel-b));
   min-width: 200px;
   flex: 0 0 200px;
 }

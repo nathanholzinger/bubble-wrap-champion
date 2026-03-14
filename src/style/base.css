@@ -10,6 +10,11 @@
   --g: 0;
   --b: 0;
 
+  /* Per-element tint channels — driven by roxygen/goxygen/bloxygen via color.ts */
+  --banner-r: 56; --banner-g: 56; --banner-b: 56; /* matches --c3 */
+  --panel-r:  40; --panel-g:  40; --panel-b:  40; /* matches --c2 */
+  --sheet-r:  40; --sheet-g:  40; --sheet-b:  40; /* matches --c2 */
+
   /* 8-bit greyscale palette — 10 distinct steps */
   --c0: #080808;
   --c1: #181818;

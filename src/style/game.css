@@ -43,7 +43,7 @@
 .stack-bg-2 { inset: 10px -9px -9px -9px; z-index: -1; background: var(--c2); border-color: var(--c3); }
 
 .bubble-sheet {
-  background: var(--sheet-bg);
+  background: rgb(var(--sheet-r), var(--sheet-g), var(--sheet-b));
   padding: 16px;
   position: relative;
   z-index: 2;
