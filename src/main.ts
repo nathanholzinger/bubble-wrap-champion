@@ -11,35 +11,63 @@ import { getCircleClipPath } from './circleClip';
 import { startLoop } from './loop';
 import { state } from './state';
 import { Config } from './config';
+import { showIntro } from './intro';
 
-// Apply initial bubble clip-path from the CSS variable
-const initialFidelity = Config.bubbles.startFidelity;
-document.documentElement.style.setProperty('--bubble-clip', getCircleClipPath(initialFidelity));
+function showSplash(hasSave: boolean): Promise<void> {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'splash-overlay';
 
-// Register all event listeners before any events can fire
-initUI();
-initMilestones();
-initSave();
+    const btn = document.createElement('button');
+    btn.className   = 'stack-btn';
+    btn.textContent = hasSave ? '[ LOAD AUTO SAVE ]' : '[ START NEW GAME ]';
 
-// Rehydrate persistent state before buildSheet resets it
-const savedData = load();
-if (savedData) {
-  Object.assign(state.resources, savedData.resources);
-  state.sheets        = savedData.sheets;
-  state.sheetNum      = savedData.sheetNum;
-  state.sheetsInStack = savedData.sheetsInStack;
+    btn.addEventListener('click', () => {
+      overlay.remove();
+      resolve();
+    });
+
+    overlay.appendChild(btn);
+    document.body.appendChild(overlay);
+  });
 }
 
-// Wire up sheet buttons
-document.getElementById('stackBtn')!.addEventListener('click', grabNewSheet);
-document.getElementById('storeBtn')!.addEventListener('click', restockSheets);
+async function main(): Promise<void> {
+  const savedData = load();
 
-// Start the game loop
-startLoop();
+  await showSplash(savedData !== null);
+  if (!savedData) await showIntro();
 
-// Build the sheet DOM, then restore mid-sheet bubble state if a save exists
-buildSheet();
-if (savedData) {
-  restoreBubbles(savedData.poppedBubbles);
-  syncUI();
+  // Apply initial bubble clip-path from the CSS variable
+  const initialFidelity = Config.bubbles.startFidelity;
+  document.documentElement.style.setProperty('--bubble-clip', getCircleClipPath(initialFidelity));
+
+  // Register all event listeners before any events can fire
+  initUI();
+  initMilestones();
+  initSave();
+
+  // Rehydrate persistent state before buildSheet resets it
+  if (savedData) {
+    Object.assign(state.resources, savedData.resources);
+    state.sheets        = savedData.sheets;
+    state.sheetNum      = savedData.sheetNum;
+    state.sheetsInStack = savedData.sheetsInStack;
+  }
+
+  // Wire up sheet buttons
+  document.getElementById('stackBtn')!.addEventListener('click', grabNewSheet);
+  document.getElementById('storeBtn')!.addEventListener('click', restockSheets);
+
+  // Start the game loop
+  startLoop();
+
+  // Build the sheet DOM, then restore mid-sheet bubble state if a save exists
+  buildSheet();
+  if (savedData) {
+    restoreBubbles(savedData.poppedBubbles);
+    syncUI();
+  }
 }
+
+main();
