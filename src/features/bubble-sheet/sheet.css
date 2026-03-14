@@ -5,6 +5,9 @@
   position: relative;
   margin-bottom: 10px;
   isolation: isolate; /* own stacking context so table-surface z-index: -1 stays visible */
+  display: flex;
+  justify-content: center; /* center sheet horizontally when smaller than table */
+  align-items: flex-start; /* keep sheet anchored to top */
 }
 
 /* Table surface behind everything — grows automatically with the sheet */

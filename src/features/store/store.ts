@@ -110,7 +110,7 @@ function refresh(): void {
     if (item.type === 'action') {
       const available = ACTIONS[item.id].available();
       refs.costEl.textContent = available
-        ? `${state.sheets} / ${state.maxStackSize}`
+        ? `${state.sheets.length} / ${state.maxStackSize}`
         : 'FULL';
       refs.btn.disabled = !available;
 

@@ -1,15 +1,33 @@
 import './sheet.css';
-import { state, gridDims } from '../../core/state';
+import { state, gridDims, SheetInstance } from '../../core/state';
 import { emit } from '../../core/events';
 import { Config } from '../../core/config';
 
 // Sheet owns its grid element directly — no stats.ts import needed
-const grid   = document.getElementById('bubbleGrid')! as HTMLElement;
-const header = document.querySelector('.sheet-header')! as HTMLElement;
+const grid    = document.getElementById('bubbleGrid')! as HTMLElement;
+const header  = document.querySelector('.sheet-header')! as HTMLElement;
+const wrapper = document.querySelector('.sheet-wrapper')! as HTMLElement;
 
-export function buildSheet(): void {
+// Pixel constants matching CSS (.bubble, .bubble-grid gap, .bubble-sheet padding)
+const BUBBLE_PX = 64;
+const GAP_PX    = 9;
+const PAD_PX    = 16;
+
+// Sets the wrapper's min-size to the current table capacity so it always
+// visually matches the upgrade level, even when a smaller sheet is playing.
+export function updateTableSize(): void {
   const { cols, rows } = gridDims();
+  const w = cols * BUBBLE_PX + (cols - 1) * GAP_PX + PAD_PX * 2;
+  const h = rows * BUBBLE_PX + (rows - 1) * GAP_PX + PAD_PX * 2;
+  wrapper.style.minWidth  = w + 'px';
+  wrapper.style.minHeight = h + 'px';
+}
+
+export function buildSheet(dims?: SheetInstance): void {
+  updateTableSize();
+  const { cols, rows } = dims ?? gridDims();
   const total = cols * rows;
+  state.currentSheetDims = { cols, rows };
   state.gridTotal = total;
   state.popped    = 0;
   state.bubbles   = [];
@@ -47,14 +65,18 @@ export function restoreBubbles(poppedBubbles: boolean[]): void {
 }
 
 export function grabNewSheet(): void {
-  if (state.popped < state.gridTotal) return;
-  if (state.sheets === 0) return;
-  state.sheets--;
-  buildSheet();
+  if (!state.grabUnlocked && state.popped < state.gridTotal) return;
+  if (state.sheets.length === 0) return;
+  const sheet = state.sheets.shift()!;
+  if (!state.storeUnlocked && state.sheets.length === 0) state.storeUnlocked = true;
+  buildSheet(sheet);
 }
 
 export function restockSheets(): void {
-  state.sheets = state.maxStackSize;
+  const dims = gridDims();
+  while (state.sheets.length < state.maxStackSize) {
+    state.sheets.push({ ...dims });
+  }
   emit('stack:restocked');
 }
 
@@ -76,5 +98,6 @@ function popBubble(i: number, el: HTMLElement): void {
 
 function onSheetComplete(): void {
   state.completedSheets++;
+  if (!state.grabUnlocked) state.grabUnlocked = true;
   emit('sheet:complete');
 }

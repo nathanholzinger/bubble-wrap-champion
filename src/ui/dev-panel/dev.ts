@@ -4,6 +4,11 @@ import { clearSave } from '../../persistence/save';
 import { state } from '../../core/state';
 import { syncUI, dom } from '../stats-panel/stats';
 import type { ResourceId } from '../../core/resources';
+import { onUpdate } from '../../core/loop';
+import { totalRate, registerProducer } from '../../core/producers';
+
+let devProducerRate = 0;
+registerProducer({ id: 'dev', resource: 'oxygen', rate: () => devProducerRate });
 
 const DEV_RESOURCES: ResourceId[] = ['oxygen', 'roxygen', 'bloxygen', 'goxygen'];
 
@@ -44,6 +49,16 @@ function buildDevPanel(): void {
       <div class="stat-divider"></div>
 
       <div class="dev-resource-row" id="devMaxStackRow"></div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-divider"></div>
+
+      <div class="dev-resource-row" id="devRateRow">
+        <span class="dev-resource-label">&gt; O2/SEC</span>
+        <input type="number" class="dev-number" id="devO2RateInput" min="0" value="0">
+        <span class="dev-label-value" id="devO2Rate">0.00</span>
+      </div>
 
       <div class="stat-divider"></div>
 
@@ -97,13 +112,21 @@ function buildDevPanel(): void {
     const val = parseInt(maxStackInput.value);
     if (val > 0) {
       state.maxStackSize = val;
-      dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets} / ${state.maxStackSize}`;
+      dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets.length} / ${state.maxStackSize}`;
     }
   });
 
   maxStackRow.appendChild(maxStackLabel);
   maxStackRow.appendChild(maxStackInput);
   maxStackRow.appendChild(maxStackBtn);
+
+  // O2/sec dev producer — input sets the rate, display shows the live total
+  const o2RateInput = panel.querySelector('#devO2RateInput') as HTMLInputElement;
+  const o2RateEl    = panel.querySelector('#devO2Rate') as HTMLElement;
+  o2RateInput.addEventListener('input', () => {
+    devProducerRate = Math.max(0, parseFloat(o2RateInput.value) || 0);
+  });
+  onUpdate(() => { o2RateEl.textContent = totalRate('oxygen').toFixed(2); });
 
   // Resource injection rows
   const resourcesContainer = panel.querySelector('#devResources') as HTMLElement;

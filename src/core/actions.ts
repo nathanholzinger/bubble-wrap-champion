@@ -12,6 +12,6 @@ export const ACTIONS: Record<ActionId, ActionDef> = {
   collectSheets: {
     id:        'collectSheets',
     label:     'BUBBLE WRAP SHEETS',
-    available: () => state.sheets < state.maxStackSize,
+    available: () => state.sheets.length < state.maxStackSize,
   },
 };

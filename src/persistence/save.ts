@@ -1,4 +1,4 @@
-import { state } from '../core/state';
+import { state, SheetInstance } from '../core/state';
 import { on } from '../core/events';
 import { Config } from '../core/config';
 import { ResourceId, ResourceMap } from '../core/resources';
@@ -11,14 +11,17 @@ const { key: SAVE_KEY, version: SAVE_VERSION } = Config.save;
 type SerializedResources = Record<ResourceId, string>;
 
 export interface SaveData {
-  version:       number;
-  resources:     SerializedResources;
-  sheets:        number;
-  sheetsInStack: number;
-  maxStackSize:  number;
-  purchases:     Partial<Record<UpgradeId, number>>;
-  trades:        Partial<Record<TradeId,   number>>;
-  poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
+  version:          number;
+  resources:        SerializedResources;
+  sheets:           number;                            // completedSheets
+  sheetsInStack:    SheetInstance[];                   // waiting sheet instances
+  currentSheetDims: SheetInstance;                     // dims of the active sheet
+  maxStackSize:     number;
+  purchases:        Partial<Record<UpgradeId, number>>;
+  trades:           Partial<Record<TradeId,   number>>;
+  grabUnlocked:     boolean;
+  storeUnlocked:    boolean;
+  poppedBubbles:    boolean[];
 }
 
 function serializeResources(map: ResourceMap): SerializedResources {
@@ -35,26 +38,32 @@ function deserializeResources(raw: SerializedResources): ResourceMap {
 
 export function save(): void {
   const data: SaveData = {
-    version:       SAVE_VERSION,
-    resources:     serializeResources(state.resources),
-    sheets:        state.completedSheets,
-    sheetsInStack: state.sheets,
-    maxStackSize:  state.maxStackSize,
-    purchases:     state.purchases,
-    trades:        state.trades,
-    poppedBubbles: state.bubbles.map(b => b.popped),
+    version:          SAVE_VERSION,
+    resources:        serializeResources(state.resources),
+    sheets:           state.completedSheets,
+    sheetsInStack:    state.sheets,
+    currentSheetDims: state.currentSheetDims,
+    maxStackSize:     state.maxStackSize,
+    purchases:        state.purchases,
+    trades:           state.trades,
+    grabUnlocked:     state.grabUnlocked,
+    storeUnlocked:    state.storeUnlocked,
+    poppedBubbles:    state.bubbles.map(b => b.popped),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 
 export interface LoadedData {
-  resources:     ResourceMap;
-  sheets:        number;
-  sheetsInStack: number;
-  maxStackSize:  number;
-  purchases:     Partial<Record<UpgradeId, number>>;
-  trades:        Partial<Record<TradeId,   number>>;
-  poppedBubbles: boolean[];
+  resources:        ResourceMap;
+  sheets:           number;
+  sheetsInStack:    SheetInstance[];
+  currentSheetDims: SheetInstance;
+  maxStackSize:     number;
+  purchases:        Partial<Record<UpgradeId, number>>;
+  trades:           Partial<Record<TradeId,   number>>;
+  grabUnlocked:     boolean;
+  storeUnlocked:    boolean;
+  poppedBubbles:    boolean[];
 }
 
 export function load(): LoadedData | null {
@@ -64,13 +73,16 @@ export function load(): LoadedData | null {
     const data = JSON.parse(raw) as SaveData;
     if (data.version !== SAVE_VERSION) return null;
     return {
-      resources:     deserializeResources(data.resources),
-      sheets:        data.sheets,
-      sheetsInStack: data.sheetsInStack,
-      maxStackSize:  data.maxStackSize,
-      purchases:     data.purchases  ?? {},
-      trades:        data.trades     ?? {},
-      poppedBubbles: data.poppedBubbles,
+      resources:        deserializeResources(data.resources),
+      sheets:           data.sheets,
+      sheetsInStack:    data.sheetsInStack,
+      currentSheetDims: data.currentSheetDims,
+      maxStackSize:     data.maxStackSize,
+      purchases:        data.purchases    ?? {},
+      trades:           data.trades       ?? {},
+      grabUnlocked:     data.grabUnlocked  ?? false,
+      storeUnlocked:    data.storeUnlocked ?? false,
+      poppedBubbles:    data.poppedBubbles,
     };
   } catch {
     return null;

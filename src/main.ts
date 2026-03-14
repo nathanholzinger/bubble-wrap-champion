@@ -8,7 +8,8 @@ import { init as initSave, load } from './persistence/save';
 import { buildSheet, grabNewSheet, restoreBubbles } from './features/bubble-sheet/sheet';
 import { openStore } from './features/store/store';
 import { getCircleClipPath } from './features/bubble-sheet/circleClip';
-import { startLoop } from './core/loop';
+import { startLoop, onUpdate } from './core/loop';
+import { tick as producerTick } from './core/producers';
 import { state } from './core/state';
 import { Config } from './core/config';
 import { showIntro } from './ui/intro/intro';
@@ -32,22 +33,27 @@ async function main(): Promise<void> {
   // Rehydrate persistent state before buildSheet resets it
   if (savedData) {
     Object.assign(state.resources, savedData.resources);
-    state.completedSheets = savedData.sheets;
-    state.sheets          = savedData.sheetsInStack;
-    state.maxStackSize    = savedData.maxStackSize;
+    state.completedSheets  = savedData.sheets;
+    state.sheets           = savedData.sheetsInStack;
+    state.currentSheetDims = savedData.currentSheetDims;
+    state.maxStackSize     = savedData.maxStackSize;
     Object.assign(state.purchases, savedData.purchases);
     Object.assign(state.trades,    savedData.trades);
+    state.grabUnlocked  = savedData.grabUnlocked;
+    state.storeUnlocked = savedData.storeUnlocked;
   }
 
   // Wire up sheet buttons
   document.getElementById('stackBtn')!.addEventListener('click', grabNewSheet);
   document.getElementById('storeBtn')!.addEventListener('click', openStore);
 
-  // Start the game loop
+  // Register tick systems then start the loop
+  onUpdate(producerTick);
   startLoop();
 
-  // Build the sheet DOM, then restore mid-sheet bubble state if a save exists
-  buildSheet();
+  // Build the sheet DOM using saved dims (or current table size for a new game),
+  // then restore mid-sheet bubble state if a save exists
+  buildSheet(savedData?.currentSheetDims);
   if (savedData) {
     restoreBubbles(savedData.poppedBubbles);
     syncUI();

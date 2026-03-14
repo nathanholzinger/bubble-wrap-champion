@@ -1,8 +1,9 @@
 export type EventMap = {
-  'bubble:popped':   { x: number; y: number };
-  'sheet:complete':  undefined;
-  'sheet:new':       undefined;
-  'stack:restocked': undefined;
+  'bubble:popped':    { x: number; y: number };
+  'sheet:complete':   undefined;
+  'sheet:new':        undefined;
+  'stack:restocked':  undefined;
+  'resources:produced': undefined;
 };
 
 type Handler<T> = (payload: T) => void;
