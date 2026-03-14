@@ -35,8 +35,8 @@ async function main(): Promise<void> {
     state.completedSheets = savedData.sheets;
     state.sheets          = savedData.sheetsInStack;
     state.maxStackSize    = savedData.maxStackSize;
-    state.woodBought      = savedData.woodBought;
-    state.tableUpgrades   = savedData.tableUpgrades;
+    Object.assign(state.purchases, savedData.purchases);
+    Object.assign(state.trades,    savedData.trades);
   }
 
   // Wire up sheet buttons

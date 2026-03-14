@@ -2,6 +2,8 @@ import { state } from '../core/state';
 import { on } from '../core/events';
 import { Config } from '../core/config';
 import { ResourceId, ResourceMap } from '../core/resources';
+import { UpgradeId } from '../core/upgrades';
+import { TradeId } from '../core/trades';
 
 const { key: SAVE_KEY, version: SAVE_VERSION } = Config.save;
 
@@ -14,8 +16,8 @@ export interface SaveData {
   sheets:        number;
   sheetsInStack: number;
   maxStackSize:  number;
-  woodBought:    number;
-  tableUpgrades: number;
+  purchases:     Partial<Record<UpgradeId, number>>;
+  trades:        Partial<Record<TradeId,   number>>;
   poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
 }
 
@@ -38,27 +40,36 @@ export function save(): void {
     sheets:        state.completedSheets,
     sheetsInStack: state.sheets,
     maxStackSize:  state.maxStackSize,
-    woodBought:    state.woodBought,
-    tableUpgrades: state.tableUpgrades,
+    purchases:     state.purchases,
+    trades:        state.trades,
     poppedBubbles: state.bubbles.map(b => b.popped),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 
-export function load(): { resources: ResourceMap; sheets: number; sheetsInStack: number; maxStackSize: number; woodBought: number; tableUpgrades: number; poppedBubbles: boolean[] } | null {
+export interface LoadedData {
+  resources:     ResourceMap;
+  sheets:        number;
+  sheetsInStack: number;
+  maxStackSize:  number;
+  purchases:     Partial<Record<UpgradeId, number>>;
+  trades:        Partial<Record<TradeId,   number>>;
+  poppedBubbles: boolean[];
+}
+
+export function load(): LoadedData | null {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw) as SaveData;
-    // Reject saves from incompatible versions rather than crash on bad shape
     if (data.version !== SAVE_VERSION) return null;
     return {
       resources:     deserializeResources(data.resources),
       sheets:        data.sheets,
       sheetsInStack: data.sheetsInStack,
       maxStackSize:  data.maxStackSize,
-      woodBought:    data.woodBought,
-      tableUpgrades: data.tableUpgrades,
+      purchases:     data.purchases  ?? {},
+      trades:        data.trades     ?? {},
       poppedBubbles: data.poppedBubbles,
     };
   } catch {
