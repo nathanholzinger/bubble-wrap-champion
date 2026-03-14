@@ -1,36 +1,17 @@
 import './style/base.css';
-import './style/components.css';
-import './style/game.css';
+import './style/layout.css';
 
-import './dev';
-import { init as initUI, syncUI } from './ui';
-import { init as initMilestones } from './systems/milestones';
-import { init as initSave, load } from './save';
-import { buildSheet, grabNewSheet, restockSheets, restoreBubbles } from './systems/sheet';
-import { getCircleClipPath } from './circleClip';
-import { startLoop } from './loop';
-import { state } from './state';
-import { Config } from './config';
-import { showIntro } from './intro';
-
-function showSplash(hasSave: boolean): Promise<void> {
-  return new Promise(resolve => {
-    const overlay = document.createElement('div');
-    overlay.className = 'splash-overlay';
-
-    const btn = document.createElement('button');
-    btn.className   = 'stack-btn';
-    btn.textContent = hasSave ? '[ LOAD AUTO SAVE ]' : '[ START NEW GAME ]';
-
-    btn.addEventListener('click', () => {
-      overlay.remove();
-      resolve();
-    });
-
-    overlay.appendChild(btn);
-    document.body.appendChild(overlay);
-  });
-}
+import './ui/dev-panel/dev';
+import { init as initUI, syncUI } from './ui/stats-panel/stats';
+import { init as initMilestones } from './features/milestones/milestones';
+import { init as initSave, load } from './persistence/save';
+import { buildSheet, grabNewSheet, restockSheets, restoreBubbles } from './features/bubble-sheet/sheet';
+import { getCircleClipPath } from './features/bubble-sheet/circleClip';
+import { startLoop } from './core/loop';
+import { state } from './core/state';
+import { Config } from './core/config';
+import { showIntro } from './ui/intro/intro';
+import { showSplash } from './ui/splash/splash';
 
 async function main(): Promise<void> {
   const savedData = load();

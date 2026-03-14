@@ -1,6 +1,7 @@
-import { state } from '../state';
-import { on } from '../events';
-import { Config } from '../config';
+import './milestones.css';
+import { state } from '../../core/state';
+import { on } from '../../core/events';
+import { Config } from '../../core/config';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -17,11 +18,8 @@ interface MilestoneDefinition {
 const MILESTONES: MilestoneDefinition[] = [
   // Pop count
   { trigger: 'oxygen', threshold: 10,   message: '10 POPS — YOU HAVE THE TOUCH' },
-  { trigger: 'oxygen', threshold: 100,   message: '25 POPS — BUBBLE NOVICE' },
-  { trigger: 'oxygen', threshold: 1000,   message: '50 POPS — GETTING SERIOUS' },
-  { trigger: 'oxygen', threshold: 10000,  message: '250 POPS — BUBBLE ADEPT' },
-  { trigger: 'oxygen', threshold: 100000,  message: '500 POPS — BUBBLE VETERAN' },
-  { trigger: 'oxygen', threshold: 1000000, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
+  { trigger: 'oxygen', threshold: 100,  message: '100 POPS — BUBBLE NOVICE' },
+  { trigger: 'oxygen', threshold: 1000, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
 
   // Sheet count
   { trigger: 'sheets', threshold: 1,    message: '1 SHEET — FIRST STEPS' },

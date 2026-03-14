@@ -1,8 +1,9 @@
-import { state, GRID } from './state';
-import { on } from './events';
-import { Config } from './config';
-import { RESOURCES, ResourceId } from './resources';
-import { updateColors } from './systems/color';
+import './stats.css';
+import { state, GRID } from '../../core/state';
+import { on } from '../../core/events';
+import { Config } from '../../core/config';
+import { RESOURCES, ResourceId } from '../../core/resources';
+import { updateColors } from '../../features/color/color';
 
 export interface DomRefs {
   progFill:  HTMLElement;

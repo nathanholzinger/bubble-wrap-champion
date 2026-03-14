@@ -1,4 +1,4 @@
-import { state } from '../state';
+import { state } from '../../core/state';
 
 // Base grey values matching the CSS --cX palette entries used per element
 const BASE_BANNER = 0x38; // --c3 = #383838 (56)

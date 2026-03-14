@@ -3,7 +3,7 @@ export const Config = {
   sheet: {
     cols: 4,
     rows: 4,
-    // NOTE: if cols/rows change, also update .bubble-grid in game.css
+    // NOTE: if cols/rows change, also update .bubble-grid in bubble-sheet/sheet.css
     // (grid-template-columns: repeat(4, 1fr))
   },
 

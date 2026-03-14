@@ -1,0 +1,63 @@
+/* ================================================
+   STATS PANEL
+================================================ */
+.stats-panel {
+  background: rgb(var(--panel-r), var(--panel-g), var(--panel-b));
+  min-width: 200px;
+  flex: 0 0 200px;
+}
+
+.panel-body {
+  padding: 12px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-row { display: flex; flex-direction: column; gap: 3px; }
+
+.stat-label {
+  font-size: 0.36rem;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.stat-value {
+  font-family: 'VT323', monospace;
+  font-size: 1.9rem;
+  color: var(--text-bright);
+  line-height: 1;
+  text-shadow: var(--px) var(--px) 0 var(--c0);
+  transition: color 0.1s;
+}
+
+.stat-value.flash {
+  color: var(--cW);
+  text-shadow: 0 0 6px var(--c9), var(--px) var(--px) 0 var(--c0);
+}
+
+.stat-divider {
+  height: var(--px);
+  background: var(--c3);
+  box-shadow: 0 var(--px) 0 var(--c5);
+}
+
+/* ================================================
+   POP PARTICLE
+================================================ */
+.pop-particle {
+  position: fixed;
+  pointer-events: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.4rem;
+  color: var(--cW);
+  z-index: 9999;
+  text-shadow: var(--px) var(--px) 0 var(--c0);
+  animation: rise 0.5s steps(6) forwards;
+}
+
+@keyframes rise {
+  0%   { transform: translateY(0);    opacity: 1; }
+  70%  { transform: translateY(-32px);opacity: 1; }
+  100% { transform: translateY(-48px);opacity: 0; }
+}

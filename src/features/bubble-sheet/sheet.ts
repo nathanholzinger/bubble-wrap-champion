@@ -1,8 +1,9 @@
-import { state, GRID } from '../state';
-import { emit } from '../events';
-import { Config } from '../config';
+import './sheet.css';
+import { state, GRID } from '../../core/state';
+import { emit } from '../../core/events';
+import { Config } from '../../core/config';
 
-// Sheet owns its grid element directly — no ui.ts import needed
+// Sheet owns its grid element directly — no stats.ts import needed
 const grid = document.getElementById('bubbleGrid')!;
 
 export function buildSheet(): void {

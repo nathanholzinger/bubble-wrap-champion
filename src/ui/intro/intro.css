@@ -1,0 +1,64 @@
+/* ================================================
+   INTRO SCREEN
+================================================ */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 20000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  opacity: 1;
+  transition: opacity 0.5s steps(4);
+}
+
+.intro-overlay.intro-out { opacity: 0; }
+
+.intro-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@keyframes intro-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.intro-text {
+  opacity: 0;
+  animation: intro-fade-in 0.5s steps(4) forwards;
+}
+
+.intro-oh-no {
+  font-size: 1.6rem;
+  color: var(--cW);
+  letter-spacing: 3px;
+  text-shadow: var(--px) var(--px) 0 #000;
+}
+
+.intro-universe {
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  color: var(--c8);
+  letter-spacing: 2px;
+}
+
+.intro-must {
+  font-family: 'VT323', monospace;
+  font-size: 2rem;
+  color: var(--c7);
+  letter-spacing: 2px;
+}
+
+.intro-hurry {
+  font-size: 1.4rem;
+  color: var(--cW);
+  letter-spacing: 6px;
+  text-shadow: 0 0 16px var(--c8), var(--px) var(--px) 0 #000;
+}

@@ -1,7 +1,7 @@
-import { state } from './state';
-import { on } from './events';
-import { Config } from './config';
-import { ResourceMap } from './resources';
+import { state } from '../core/state';
+import { on } from '../core/events';
+import { Config } from '../core/config';
+import { ResourceMap } from '../core/resources';
 
 const { key: SAVE_KEY, version: SAVE_VERSION } = Config.save;
 

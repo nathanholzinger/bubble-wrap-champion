@@ -1,9 +1,9 @@
-import './style/dev.css';
-import { getCircleClipPath, GRID_SIZES } from './circleClip';
-import { clearSave } from './save';
-import { state } from './state';
-import { syncUI } from './ui';
-import type { ResourceId } from './resources';
+import './dev.css';
+import { getCircleClipPath, GRID_SIZES } from '../../features/bubble-sheet/circleClip';
+import { clearSave } from '../../persistence/save';
+import { state } from '../../core/state';
+import { syncUI } from '../stats-panel/stats';
+import type { ResourceId } from '../../core/resources';
 
 const DEV_RESOURCES: ResourceId[] = ['oxygen', 'roxygen', 'bloxygen', 'goxygen'];
 

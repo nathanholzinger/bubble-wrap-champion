@@ -1,0 +1,19 @@
+/* ================================================
+   MILESTONE BANNER
+================================================ */
+.milestone-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--c6);
+  border-bottom: var(--px) solid var(--cW);
+  outline: var(--px) solid var(--c0);
+  padding: 9px 20px;
+  font-size: 0.48rem;
+  letter-spacing: 1px;
+  text-align: center;
+  color: var(--c0);
+  z-index: 9002;
+  transform: translateY(-120%);
+  transition: transform 0.12s steps(3);
+}
+.milestone-bar.show { transform: translateY(0); }

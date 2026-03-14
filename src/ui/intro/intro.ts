@@ -1,3 +1,5 @@
+import './intro.css';
+
 // ── Timing (seconds) ─────────────────────────────────────────────────────────
 const T_OH_NO    = 0.6;
 const T_UNIVERSE = 1.8;
