@@ -10,7 +10,7 @@ export function buildSheet(): void {
   state.popped  = 0;
   state.bubbles = [];
   grid.innerHTML = '';
-  emit('sheet:new', { sheetNum: state.sheetNum });
+  emit('sheet:new');
 
   for (let i = 0; i < GRID; i++) {
     const el = document.createElement('div');
@@ -41,14 +41,13 @@ export function restoreBubbles(poppedBubbles: boolean[]): void {
 
 export function grabNewSheet(): void {
   if (state.popped < GRID) return;
-  if (state.sheetsInStack === 0) return;
-  state.sheetsInStack--;
-  state.sheetNum++;
+  if (state.sheets === 0) return;
+  state.sheets--;
   buildSheet();
 }
 
 export function restockSheets(): void {
-  state.sheetsInStack = Config.stack.size;
+  state.sheets = Config.stack.size;
   emit('stack:restocked');
 }
 
@@ -59,7 +58,7 @@ function popBubble(i: number, el: HTMLElement): void {
   el.classList.add('popped', 'just-popped');
   setTimeout(() => el.classList.remove('just-popped'), Config.animation.popFlashMs);
 
-  state.resources.oxygen++;
+  state.resources.oxygen += 1n;
   state.popped++;
 
   const r = el.getBoundingClientRect();
@@ -69,6 +68,6 @@ function popBubble(i: number, el: HTMLElement): void {
 }
 
 function onSheetComplete(): void {
-  state.sheets++;
+  state.completedSheets++;
   emit('sheet:complete');
 }

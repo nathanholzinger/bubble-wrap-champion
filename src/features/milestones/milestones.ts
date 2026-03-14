@@ -9,7 +9,7 @@ type MilestoneTrigger = 'oxygen' | 'sheets';
 
 interface MilestoneDefinition {
   trigger:   MilestoneTrigger;
-  threshold: number;
+  threshold: bigint;
   message:   string;
 }
 
@@ -17,15 +17,15 @@ interface MilestoneDefinition {
 
 const MILESTONES: MilestoneDefinition[] = [
   // Pop count
-  { trigger: 'oxygen', threshold: 10,   message: '10 POPS — YOU HAVE THE TOUCH' },
-  { trigger: 'oxygen', threshold: 100,  message: '100 POPS — BUBBLE NOVICE' },
-  { trigger: 'oxygen', threshold: 1000, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
+  { trigger: 'oxygen', threshold: 10n,   message: '10 POPS — YOU HAVE THE TOUCH' },
+  { trigger: 'oxygen', threshold: 100n,  message: '100 POPS — BUBBLE NOVICE' },
+  { trigger: 'oxygen', threshold: 1000n, message: '1000 POPS — BUBBLE WRAP CHAMPION' },
 
-  // Sheet count
-  { trigger: 'sheets', threshold: 1,    message: '1 SHEET — FIRST STEPS' },
-  { trigger: 'sheets', threshold: 10,   message: '10 SHEETS — PRODUCTIVE' },
-  { trigger: 'sheets', threshold: 100,  message: '100 SHEETS — DEDICATED' },
-  { trigger: 'sheets', threshold: 1000, message: '1000 SHEETS — SHEET MACHINE' },
+  // Sheet count (state.sheets is a number, but BigInt() on small ints is always safe)
+  { trigger: 'sheets', threshold: 1n,    message: '1 SHEET — FIRST STEPS' },
+  { trigger: 'sheets', threshold: 10n,   message: '10 SHEETS — PRODUCTIVE' },
+  { trigger: 'sheets', threshold: 100n,  message: '100 SHEETS — DEDICATED' },
+  { trigger: 'sheets', threshold: 1000n, message: '1000 SHEETS — SHEET MACHINE' },
 ];
 
 // ── State ────────────────────────────────────────────────────────────────────
@@ -40,12 +40,13 @@ const shown = new Set<string>();
 
 export function init(): void {
   on('bubble:popped',  () => check('oxygen', state.resources.oxygen));
-  on('sheet:complete', () => check('sheets', state.sheets));
+  // state.sheets is a number but will never approach 2^53 — safe to convert
+  on('sheet:complete', () => check('sheets', BigInt(state.completedSheets)));
 }
 
 // ── Internal ─────────────────────────────────────────────────────────────────
 
-function check(trigger: MilestoneTrigger, value: number): void {
+function check(trigger: MilestoneTrigger, value: bigint): void {
   const id = `${trigger}:${value}`;
   if (shown.has(id)) return;
 

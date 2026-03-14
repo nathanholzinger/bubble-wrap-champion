@@ -8,9 +8,8 @@ export interface BubbleCell {
 
 export interface GameState {
   resources:     ResourceMap;
-  sheets:        number;   // completed sheets
-  sheetNum:      number;   // current sheet number (display)
-  sheetsInStack: number;   // sheets remaining to grab before needing a restock
+  completedSheets: number;   // completed sheets
+  sheets: number;   // sheets remaining to grab before needing a restock
   popped:        number;   // bubbles popped on current sheet
   bubbles:       BubbleCell[];
 }
@@ -19,9 +18,8 @@ export { GRID } from './config';
 
 export const state: GameState = {
   resources:     makeResourceMap(),
-  sheets:        0,
-  sheetNum:      1,
-  sheetsInStack: Config.stack.size,
+  completedSheets: 0,
+  sheets: Config.stack.size,
   popped:        0,
   bubbles:       [],
 };

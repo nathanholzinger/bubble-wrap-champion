@@ -4,6 +4,7 @@ import { on } from '../../core/events';
 import { Config } from '../../core/config';
 import { RESOURCES, ResourceId } from '../../core/resources';
 import { updateColors } from '../../features/color/color';
+import { formatBigInt } from '../../core/format';
 
 export interface DomRefs {
   progFill:  HTMLElement;
@@ -107,9 +108,9 @@ function updateUI(): void {
     const el  = resourceEls[id];
     if (!row || !el) continue;
     const val = state.resources[id];
-    if (val > 0) {
+    if (val > 0n) {
       row.style.display = '';
-      el.textContent    = fmt(val);
+      el.textContent    = formatBigInt(val);
     } else {
       row.style.display = 'none';
     }
@@ -124,7 +125,7 @@ function updateUI(): void {
 
 function updateButtons(): void {
   const sheetDone = state.popped === GRID;
-  const hasSheets = state.sheetsInStack > 0;
+  const hasSheets = state.sheets > 0;
 
   dom.stackBtn.disabled = !(sheetDone && hasSheets);
   dom.storeBtn.disabled = !(sheetDone && !hasSheets);
@@ -153,8 +154,3 @@ function spawnParticle(x: number, y: number): void {
   setTimeout(() => p.remove(), lifetimeMs);
 }
 
-function fmt(n: number): string {
-  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-  return String(n);
-}

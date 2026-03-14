@@ -1,39 +1,57 @@
 import { state } from '../core/state';
 import { on } from '../core/events';
 import { Config } from '../core/config';
-import { ResourceMap } from '../core/resources';
+import { ResourceId, ResourceMap } from '../core/resources';
 
 const { key: SAVE_KEY, version: SAVE_VERSION } = Config.save;
 
+// Bigints aren't JSON-serializable, so resources are stored as decimal strings.
+type SerializedResources = Record<ResourceId, string>;
+
 export interface SaveData {
   version:       number;
-  resources:     ResourceMap;
+  resources:     SerializedResources;
   sheets:        number;
-  sheetNum:      number;
   sheetsInStack: number;
   poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
+}
+
+function serializeResources(map: ResourceMap): SerializedResources {
+  return Object.fromEntries(
+    Object.entries(map).map(([k, v]) => [k, (v as bigint).toString()])
+  ) as SerializedResources;
+}
+
+function deserializeResources(raw: SerializedResources): ResourceMap {
+  return Object.fromEntries(
+    Object.entries(raw).map(([k, v]) => [k, BigInt(v)])
+  ) as ResourceMap;
 }
 
 export function save(): void {
   const data: SaveData = {
     version:       SAVE_VERSION,
-    resources:     { ...state.resources },
-    sheets:        state.sheets,
-    sheetNum:      state.sheetNum,
-    sheetsInStack: state.sheetsInStack,
+    resources:     serializeResources(state.resources),
+    sheets:        state.completedSheets,
+    sheetsInStack: state.sheets,
     poppedBubbles: state.bubbles.map(b => b.popped),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 
-export function load(): SaveData | null {
+export function load(): { resources: ResourceMap; sheets: number; sheetsInStack: number; poppedBubbles: boolean[] } | null {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw) as SaveData;
     // Reject saves from incompatible versions rather than crash on bad shape
     if (data.version !== SAVE_VERSION) return null;
-    return data;
+    return {
+      resources:     deserializeResources(data.resources),
+      sheets:        data.sheets,
+      sheetsInStack: data.sheetsInStack,
+      poppedBubbles: data.poppedBubbles,
+    };
   } catch {
     return null;
   }

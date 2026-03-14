@@ -1,7 +1,7 @@
 export type EventMap = {
   'bubble:popped':   { x: number; y: number };
   'sheet:complete':  undefined;
-  'sheet:new':       { sheetNum: number };
+  'sheet:new':       undefined;
   'stack:restocked': undefined;
 };
 

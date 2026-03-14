@@ -7,9 +7,12 @@ const BASE_SHEET  = 0x28; // --c2 = #282828 (40)
 
 // Returns a 0–1 fraction for the given resource value
 // Formula: min((log2(value) + 1) * 10, 100) / 100
-function satFraction(value: number): number {
-  if (value <= 0) return 0;
-  return Math.min((Math.log2(value) + 1) * 10, 100) / 100;
+// Saturation reaches 100% at value >= 512 (log2(512)+1)*10 = 100).
+// Only call Number() when value is in [1, 511] — always safe.
+function satFraction(value: bigint): number {
+  if (value <= 0n)   return 0;
+  if (value >= 512n) return 1;
+  return ((Math.log2(Number(value)) + 1) * 10) / 100;
 }
 
 function lerp(a: number, b: number, t: number): number {

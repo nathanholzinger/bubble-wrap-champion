@@ -31,9 +31,8 @@ async function main(): Promise<void> {
   // Rehydrate persistent state before buildSheet resets it
   if (savedData) {
     Object.assign(state.resources, savedData.resources);
-    state.sheets        = savedData.sheets;
-    state.sheetNum      = savedData.sheetNum;
-    state.sheetsInStack = savedData.sheetsInStack;
+    state.completedSheets = savedData.sheets;
+    state.sheets          = savedData.sheetsInStack;
   }
 
   // Wire up sheet buttons

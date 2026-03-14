@@ -15,8 +15,8 @@ export const RESOURCES: ResourceDef[] = [
   { id: 'wood',     label: 'WOOD'     },
 ];
 
-export type ResourceMap = Record<ResourceId, number>;
+export type ResourceMap = Record<ResourceId, bigint>;
 
 export function makeResourceMap(): ResourceMap {
-  return Object.fromEntries(RESOURCES.map(r => [r.id, 0])) as ResourceMap;
+  return Object.fromEntries(RESOURCES.map(r => [r.id, 0n])) as ResourceMap;
 }

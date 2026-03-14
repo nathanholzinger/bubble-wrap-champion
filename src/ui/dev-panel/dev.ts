@@ -95,7 +95,7 @@ function buildDevPanel(): void {
     btn.addEventListener('click', () => {
       const amount = parseInt(input.value) || 0;
       if (amount > 0) {
-        state.resources[id] += amount;
+        state.resources[id] += BigInt(amount);
         syncUI();
       }
     });
