@@ -6,7 +6,7 @@ import './dev';
 import { init as initUI, syncUI } from './ui';
 import { init as initMilestones } from './systems/milestones';
 import { init as initSave, load } from './save';
-import { buildSheet, grabNewSheet, restoreBubbles } from './systems/sheet';
+import { buildSheet, grabNewSheet, restockSheets, restoreBubbles } from './systems/sheet';
 import { getCircleClipPath } from './circleClip';
 import { startLoop } from './loop';
 import { state } from './state';
@@ -25,12 +25,14 @@ initSave();
 const savedData = load();
 if (savedData) {
   Object.assign(state.resources, savedData.resources);
-  state.sheets   = savedData.sheets;
-  state.sheetNum = savedData.sheetNum;
+  state.sheets        = savedData.sheets;
+  state.sheetNum      = savedData.sheetNum;
+  state.sheetsInStack = savedData.sheetsInStack;
 }
 
-// Wire up the grab-new-sheet button
+// Wire up sheet buttons
 document.getElementById('stackBtn')!.addEventListener('click', grabNewSheet);
+document.getElementById('storeBtn')!.addEventListener('click', restockSheets);
 
 // Start the game loop
 startLoop();

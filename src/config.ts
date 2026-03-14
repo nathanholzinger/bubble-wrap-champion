@@ -30,9 +30,13 @@ export const Config = {
     maxDeltaSec: 0.1,  // dt is capped to prevent jumps after tab blur/focus
   },
 
+  stack: {
+    size: 4,  // sheets available per store run (also the starting supply)
+  },
+
   save: {
     key:     'bwc_save',
-    version: 2,
+    version: 3,
     // Bump version whenever SaveData's shape changes — old saves will be discarded
   },
 

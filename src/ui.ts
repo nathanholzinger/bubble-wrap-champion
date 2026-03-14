@@ -11,6 +11,7 @@ export interface DomRefs {
   progFill:    HTMLElement;
   progText:    HTMLElement;
   stackBtn:    HTMLButtonElement;
+  storeBtn:    HTMLButtonElement;
   btnHint:     HTMLElement;
   sheetDone:   HTMLElement;
   milBar:      HTMLElement;
@@ -33,6 +34,7 @@ export const dom: DomRefs = {
   progFill:    getEl('progFill'),
   progText:    getEl('progText'),
   stackBtn:    getEl('stackBtn') as HTMLButtonElement,
+  storeBtn:    getEl('storeBtn') as HTMLButtonElement,
   btnHint:     getEl('btnHint'),
   sheetDone:   getEl('sheetDone'),
   milBar:      getEl('milestoneBanner'),
@@ -50,15 +52,19 @@ export function init(): void {
 
   on('sheet:complete', () => {
     dom.sheetDone.classList.add('show');
-    dom.stackBtn.disabled = false;
-    dom.btnHint.textContent = 'READY FOR NEXT SHEET';
     flashStat(dom.sheetsEl);
+    updateButtons();
     updateUI();
+  });
+
+  on('stack:restocked', () => {
+    updateButtons();
   });
 
   on('sheet:new', ({ sheetNum }) => {
     dom.sheetDone.classList.remove('show');
     dom.stackBtn.disabled = true;
+    dom.storeBtn.disabled = true;
     dom.btnHint.textContent = 'POP ALL BUBBLES FIRST';
     dom.sheetNumA.textContent = String(sheetNum);
     dom.sheetNumB.textContent = String(sheetNum);
@@ -73,12 +79,24 @@ export function syncUI(): void {
   dom.sheetNumB.textContent = String(state.sheetNum);
   if (state.popped === GRID) {
     dom.sheetDone.classList.add('show');
-    dom.stackBtn.disabled = false;
-    dom.btnHint.textContent = 'READY FOR NEXT SHEET';
+    updateButtons();
   }
 }
 
 // ── Internal ─────────────────────────────────────────────────────────────────
+
+function updateButtons(): void {
+  const sheetDone = state.popped === GRID;
+  const hasSheets = state.sheetsInStack > 0;
+
+  dom.stackBtn.disabled = !(sheetDone && hasSheets);
+  dom.storeBtn.disabled = !(sheetDone && !hasSheets);
+  dom.btnHint.textContent = !sheetDone
+    ? 'POP ALL BUBBLES FIRST'
+    : hasSheets
+      ? 'READY FOR NEXT SHEET'
+      : 'OUT OF SHEETS — RUN TO STORE';
+}
 
 function buildResourceRows(): void {
   const container = getEl('resourceStats');

@@ -10,6 +10,7 @@ export interface SaveData {
   resources:     ResourceMap;
   sheets:        number;
   sheetNum:      number;
+  sheetsInStack: number;
   poppedBubbles: boolean[]; // per-bubble popped state for the current sheet
 }
 
@@ -19,6 +20,7 @@ export function save(): void {
     resources:     { ...state.resources },
     sheets:        state.sheets,
     sheetNum:      state.sheetNum,
+    sheetsInStack: state.sheetsInStack,
     poppedBubbles: state.bubbles.map(b => b.popped),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -43,7 +45,8 @@ export function clearSave(): void {
 
 // Subscribe to events so saves happen automatically
 export function init(): void {
-  on('bubble:popped',  save);
-  on('sheet:complete', save);
-  on('sheet:new',      save);
+  on('bubble:popped',   save);
+  on('sheet:complete',  save);
+  on('sheet:new',       save);
+  on('stack:restocked', save);
 }

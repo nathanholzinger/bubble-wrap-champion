@@ -40,8 +40,15 @@ export function restoreBubbles(poppedBubbles: boolean[]): void {
 
 export function grabNewSheet(): void {
   if (state.popped < GRID) return;
+  if (state.sheetsInStack === 0) return;
+  state.sheetsInStack--;
   state.sheetNum++;
   buildSheet();
+}
+
+export function restockSheets(): void {
+  state.sheetsInStack = Config.stack.size;
+  emit('stack:restocked');
 }
 
 function popBubble(i: number, el: HTMLElement): void {
