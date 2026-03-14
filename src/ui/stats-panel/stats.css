@@ -52,18 +52,17 @@
   font-size: 0.4rem;
   color: var(--cW);
   z-index: 9999;
-  text-shadow: var(--px) var(--px) 0 var(--c0);
-  animation: rise 0.5s steps(6) forwards;
+  text-shadow:
+    0 0 5px  var(--cW),
+    0 0 12px var(--c7),
+    var(--px) var(--px) 0 var(--c0);
 }
 
-@keyframes rise {
-  0%   { transform: translateY(0);    opacity: 1; }
-  70%  { transform: translateY(-32px);opacity: 1; }
-  100% { transform: translateY(-48px);opacity: 0; }
-}
-
-/* Worker particle — sucked toward chair via JS animate(), no CSS rise */
+/* Worker particle — sucked toward chair; dimmer to signal oxygen not collected */
 .pop-particle--worker {
-  animation: none;
   color: var(--c5);
+  text-shadow:
+    0 0 5px  var(--c5),
+    0 0 10px var(--c3),
+    var(--px) var(--px) 0 var(--c0);
 }

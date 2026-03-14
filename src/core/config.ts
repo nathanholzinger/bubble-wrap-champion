@@ -13,7 +13,8 @@ export const Config = {
       text:       '+O2',
       offsetX:    12,  // px left of bubble center
       offsetY:    4,   // px above bubble top
-      lifetimeMs: 550,
+      lifetimeMs: 900,
+      arcRange:   80,  // max px of perpendicular arc deflection (random ±)
     },
   },
 

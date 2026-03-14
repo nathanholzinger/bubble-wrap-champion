@@ -42,10 +42,10 @@ export function init(): void {
   buildResourceRows();
 
   on('bubble:popped', ({ x, y }) => {
+    updateUI();  // show/update oxygen row before computing particle target rect
     spawnParticle(x, y);
     const oxygenEl = resourceEls['oxygen'];
     if (oxygenEl) flashStat(oxygenEl);
-    updateUI();
   });
 
   on('bubble:worker_popped', ({ x, y, chairPos }) => {
@@ -155,6 +155,37 @@ function flashStat(el: HTMLElement): void {
   setTimeout(() => el.classList.remove('flash'), Config.animation.statFlashMs);
 }
 
+// Animates a particle along a randomised arc toward (dx, dy) from its origin.
+// The arc is created by deflecting the midpoint perpendicularly to the travel
+// direction by a random amount — no extra libraries required.
+function animateArc(
+  el: HTMLElement,
+  dx: number,
+  dy: number,
+  lifetimeMs: number,
+  easing: string,
+): void {
+  const { arcRange } = Config.bubbles.particle;
+  const length = Math.sqrt(dx * dx + dy * dy) || 1;
+  // Perpendicular unit vector (rotate travel dir 90°)
+  const perpX = -dy / length;
+  const perpY =  dx / length;
+  // Random signed deflection
+  const deflect = (Math.random() - 0.5) * 2 * arcRange;
+  const midX = dx * 0.45 + perpX * deflect;
+  const midY = dy * 0.45 + perpY * deflect;
+
+  el.animate(
+    [
+      { offset: 0,    transform: 'translate(0,0) scale(1)',                           opacity: 1 },
+      { offset: 0.45, transform: `translate(${midX}px,${midY}px) scale(0.85)`,        opacity: 1 },
+      { offset: 0.72, transform: `translate(${dx * 0.8}px,${dy * 0.8}px) scale(0.4)`, opacity: 1 },
+      { offset: 1,    transform: `translate(${dx}px,${dy}px) scale(0.15)`,             opacity: 0 },
+    ],
+    { duration: lifetimeMs, easing, fill: 'forwards' },
+  );
+}
+
 function spawnParticle(x: number, y: number): void {
   const p = document.createElement('div');
   p.className = 'pop-particle';
@@ -163,6 +194,15 @@ function spawnParticle(x: number, y: number): void {
   p.style.left  = (x - offsetX) + 'px';
   p.style.top   = (y - offsetY) + 'px';
   document.body.appendChild(p);
+
+  const oxygenEl = resourceEls['oxygen'];
+  if (oxygenEl) {
+    const cr = oxygenEl.getBoundingClientRect();
+    const dx = (cr.left + cr.width  / 2) - (x - offsetX);
+    const dy = (cr.top  + cr.height / 2) - (y - offsetY);
+    animateArc(p, dx, dy, lifetimeMs, 'ease-in-out');
+  }
+
   setTimeout(() => p.remove(), lifetimeMs);
 }
 
@@ -177,16 +217,10 @@ function spawnWorkerParticle(x: number, y: number, chairPos: string): void {
 
   const chairEl = document.querySelector(`.chair--${chairPos}`);
   if (chairEl) {
-    const cr  = chairEl.getBoundingClientRect();
-    const dx  = (cr.left + cr.width  / 2) - (x - offsetX);
-    const dy  = (cr.top  + cr.height / 2) - (y - offsetY);
-    p.animate(
-      [
-        { transform: 'translate(0,0) scale(1)',    opacity: 1 },
-        { transform: `translate(${dx}px,${dy}px) scale(0.2)`, opacity: 0 },
-      ],
-      { duration: lifetimeMs, easing: 'ease-in', fill: 'forwards' },
-    );
+    const cr = chairEl.getBoundingClientRect();
+    const dx = (cr.left + cr.width  / 2) - (x - offsetX);
+    const dy = (cr.top  + cr.height / 2) - (y - offsetY);
+    animateArc(p, dx, dy, lifetimeMs, 'ease-in');
   }
 
   setTimeout(() => p.remove(), lifetimeMs);

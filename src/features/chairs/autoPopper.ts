@@ -13,10 +13,14 @@ type Orders = Record<ChairPos, number[]>;
 
 let orders: Orders = { south: [], north: [], east: [], west: [] };
 
-const cursors:      Record<ChairPos, number>  = { south: 0, north: 0, east: 0, west: 0 };
-const accums:       Record<ChairPos, number>  = { south: 0, north: 0, east: 0, west: 0 };
+const cursors:    Record<ChairPos, number>  = { south: 0, north: 0, east: 0, west: 0 };
 // Worker claims the 1st pop, player gets the 2nd, then alternates per chair
-const workerTurn:   Record<ChairPos, boolean> = { south: true, north: true, east: true, west: true };
+const workerTurn: Record<ChairPos, boolean> = { south: true, north: true, east: true, west: true };
+
+// Shared accumulator — fires at POP_RATE * count total pops/sec in round-robin order
+let sharedAccum   = 0;
+let roundRobinIdx = 0;
+let lastCount     = 0;
 
 // ── Traversal builders ────────────────────────────────────────────────────────
 //
@@ -90,9 +94,11 @@ function rebuildOrders(): void {
 function resetState(): void {
   for (const pos of POSITIONS) {
     cursors[pos]    = 0;
-    accums[pos]     = 0;
     workerTurn[pos] = true;
   }
+  sharedAccum   = 0;
+  roundRobinIdx = 0;
+  lastCount     = 0;
 }
 
 // ── Tick ─────────────────────────────────────────────────────────────────────
@@ -117,15 +123,25 @@ function popNext(pos: ChairPos): void {
 
 function tick(dt: number): void {
   const count = effectiveChairCount();
-  if (count === 0) return;
+  if (count === 0) {
+    sharedAccum = 0;
+    lastCount   = 0;
+    return;
+  }
 
-  for (let i = 0; i < POSITIONS.length && i < count; i++) {
-    const pos = POSITIONS[i];
-    accums[pos] += POP_RATE * dt;
-    const pops = Math.floor(accums[pos]);
-    if (pops === 0) continue;
-    accums[pos] -= pops;
-    for (let p = 0; p < pops; p++) popNext(pos);
+  if (count !== lastCount) {
+    roundRobinIdx = 0;
+    lastCount     = count;
+  }
+
+  sharedAccum += POP_RATE * count * dt;
+  const pops = Math.floor(sharedAccum);
+  if (pops === 0) return;
+  sharedAccum -= pops;
+
+  for (let p = 0; p < pops; p++) {
+    popNext(POSITIONS[roundRobinIdx]);
+    roundRobinIdx = (roundRobinIdx + 1) % count;
   }
 }
 
