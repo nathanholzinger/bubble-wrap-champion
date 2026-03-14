@@ -4,21 +4,18 @@ import { Config } from './config';
 import { RESOURCES, ResourceId } from './resources';
 
 export interface DomRefs {
-  sheetsEl:    HTMLElement;
-  sheetNumA:   HTMLElement;
-  sheetNumB:   HTMLElement;
-  bubbleCntEl: HTMLElement;
-  progFill:    HTMLElement;
-  progText:    HTMLElement;
-  stackBtn:    HTMLButtonElement;
-  storeBtn:    HTMLButtonElement;
-  btnHint:     HTMLElement;
-  sheetDone:   HTMLElement;
-  milBar:      HTMLElement;
+  progFill:  HTMLElement;
+  progText:  HTMLElement;
+  stackBtn:  HTMLButtonElement;
+  storeBtn:  HTMLButtonElement;
+  btnHint:   HTMLElement;
+  sheetDone: HTMLElement;
+  milBar:    HTMLElement;
 }
 
-// Populated during init() from the resource registry
-const resourceEls: Partial<Record<ResourceId, HTMLElement>> = {};
+// Per-resource DOM nodes populated during init()
+const resourceRows: Partial<Record<ResourceId, HTMLElement>> = {}; // the stat-row (for show/hide)
+const resourceEls:  Partial<Record<ResourceId, HTMLElement>> = {}; // the stat-value (for text)
 
 function getEl(id: string): HTMLElement {
   const el = document.getElementById(id);
@@ -27,17 +24,13 @@ function getEl(id: string): HTMLElement {
 }
 
 export const dom: DomRefs = {
-  sheetsEl:    getEl('sheetsCount'),
-  sheetNumA:   getEl('sheetNum'),
-  sheetNumB:   getEl('sheetNumLabel'),
-  bubbleCntEl: getEl('bubbleCount'),
-  progFill:    getEl('progFill'),
-  progText:    getEl('progText'),
-  stackBtn:    getEl('stackBtn') as HTMLButtonElement,
-  storeBtn:    getEl('storeBtn') as HTMLButtonElement,
-  btnHint:     getEl('btnHint'),
-  sheetDone:   getEl('sheetDone'),
-  milBar:      getEl('milestoneBanner'),
+  progFill:  getEl('progFill'),
+  progText:  getEl('progText'),
+  stackBtn:  getEl('stackBtn') as HTMLButtonElement,
+  storeBtn:  getEl('storeBtn') as HTMLButtonElement,
+  btnHint:   getEl('btnHint'),
+  sheetDone: getEl('sheetDone'),
+  milBar:    getEl('milestoneBanner'),
 };
 
 export function init(): void {
@@ -52,7 +45,6 @@ export function init(): void {
 
   on('sheet:complete', () => {
     dom.sheetDone.classList.add('show');
-    flashStat(dom.sheetsEl);
     updateButtons();
     updateUI();
   });
@@ -61,13 +53,11 @@ export function init(): void {
     updateButtons();
   });
 
-  on('sheet:new', ({ sheetNum }) => {
+  on('sheet:new', () => {
     dom.sheetDone.classList.remove('show');
     dom.stackBtn.disabled = true;
     dom.storeBtn.disabled = true;
     dom.btnHint.textContent = 'POP ALL BUBBLES FIRST';
-    dom.sheetNumA.textContent = String(sheetNum);
-    dom.sheetNumB.textContent = String(sheetNum);
     updateUI();
   });
 }
@@ -75,8 +65,6 @@ export function init(): void {
 // Forces a full UI sync from state — used after save restoration
 export function syncUI(): void {
   updateUI();
-  dom.sheetNumA.textContent = String(state.sheetNum);
-  dom.sheetNumB.textContent = String(state.sheetNum);
   if (state.popped === GRID) {
     dom.sheetDone.classList.add('show');
     updateButtons();
@@ -84,6 +72,51 @@ export function syncUI(): void {
 }
 
 // ── Internal ─────────────────────────────────────────────────────────────────
+
+function buildResourceRows(): void {
+  const container = getEl('resourceStats');
+  container.style.cssText = 'display:flex;flex-direction:column;gap:10px';
+
+  for (const { id, label } of RESOURCES) {
+    const row = document.createElement('div');
+    row.className    = 'stat-row';
+    row.style.display = 'none'; // hidden until value > 0
+
+    const lbl = document.createElement('div');
+    lbl.className   = 'stat-label';
+    lbl.textContent = '> ' + label;
+
+    const val = document.createElement('div');
+    val.className   = 'stat-value';
+    val.textContent = '0';
+
+    row.appendChild(lbl);
+    row.appendChild(val);
+    container.appendChild(row);
+
+    resourceRows[id] = row;
+    resourceEls[id]  = val;
+  }
+}
+
+function updateUI(): void {
+  for (const { id } of RESOURCES) {
+    const row = resourceRows[id];
+    const el  = resourceEls[id];
+    if (!row || !el) continue;
+    const val = state.resources[id];
+    if (val > 0) {
+      row.style.display = '';
+      el.textContent    = fmt(val);
+    } else {
+      row.style.display = 'none';
+    }
+  }
+
+  const pct = Math.round((state.popped / GRID) * 100);
+  dom.progFill.style.width = pct + '%';
+  dom.progText.textContent = pct + '%';
+}
 
 function updateButtons(): void {
   const sheetDone = state.popped === GRID;
@@ -98,45 +131,6 @@ function updateButtons(): void {
       : 'OUT OF SHEETS — RUN TO STORE';
 }
 
-function buildResourceRows(): void {
-  const container = getEl('resourceStats');
-  for (const { id, label } of RESOURCES) {
-    const row = document.createElement('div');
-    row.className = 'stat-row';
-
-    const lbl = document.createElement('div');
-    lbl.className = 'stat-label';
-    lbl.textContent = '> ' + label;
-
-    const val = document.createElement('div');
-    val.className = 'stat-value';
-    val.textContent = '0';
-
-    row.appendChild(lbl);
-    row.appendChild(val);
-    container.appendChild(row);
-
-    const divider = document.createElement('div');
-    divider.className = 'stat-divider';
-    container.appendChild(divider);
-
-    resourceEls[id] = val;
-  }
-}
-
-function updateUI(): void {
-  for (const { id } of RESOURCES) {
-    const el = resourceEls[id];
-    if (el) el.textContent = fmt(state.resources[id]);
-  }
-  dom.sheetsEl.textContent    = fmt(state.sheets);
-  dom.bubbleCntEl.textContent = pad2(state.popped) + '/' + GRID;
-
-  const pct = Math.round((state.popped / GRID) * 100);
-  dom.progFill.style.width = pct + '%';
-  dom.progText.textContent = pct + '%';
-}
-
 function flashStat(el: HTMLElement): void {
   el.classList.remove('flash');
   void el.offsetWidth;
@@ -149,8 +143,8 @@ function spawnParticle(x: number, y: number): void {
   p.className = 'pop-particle';
   const { text, offsetX, offsetY, lifetimeMs } = Config.bubbles.particle;
   p.textContent = text;
-  p.style.left = (x - offsetX) + 'px';
-  p.style.top  = (y - offsetY) + 'px';
+  p.style.left  = (x - offsetX) + 'px';
+  p.style.top   = (y - offsetY) + 'px';
   document.body.appendChild(p);
   setTimeout(() => p.remove(), lifetimeMs);
 }
@@ -160,5 +154,3 @@ function fmt(n: number): string {
   if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
   return String(n);
 }
-
-function pad2(n: number): string { return n < 10 ? '0' + n : String(n); }

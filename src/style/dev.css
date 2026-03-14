@@ -61,7 +61,71 @@
   line-height: 1;
 }
 
-/* Range slider — styled to match the 8-bit aesthetic */
+/* ================================================
+   RESOURCE INJECTION
+================================================ */
+.dev-resource-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dev-resource-label {
+  font-size: 0.36rem;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.dev-number {
+  width: 52px;
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  line-height: 1;
+  background: var(--c1);
+  color: var(--text-bright);
+  border-top:    var(--px) solid var(--c0);
+  border-left:   var(--px) solid var(--c0);
+  border-right:  var(--px) solid var(--c6);
+  border-bottom: var(--px) solid var(--c6);
+  text-align: right;
+  padding: 1px 4px;
+  outline: none;
+}
+
+.dev-number::-webkit-inner-spin-button,
+.dev-number::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.dev-number[type=number] {
+  -moz-appearance: textfield;
+}
+
+.dev-add-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.3rem;
+  letter-spacing: 0.5px;
+  background: var(--c3);
+  color: var(--text-bright);
+  border-top:    var(--px) solid var(--c6);
+  border-left:   var(--px) solid var(--c6);
+  border-right:  var(--px) solid var(--c1);
+  border-bottom: var(--px) solid var(--c1);
+  padding: 3px 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dev-add-btn:active {
+  border-top-color:    var(--c1);
+  border-left-color:   var(--c1);
+  border-right-color:  var(--c6);
+  border-bottom-color: var(--c6);
+}
+
+/* ================================================
+   RANGE SLIDER — styled to match the 8-bit aesthetic */
 .dev-range {
   -webkit-appearance: none;
   appearance: none;
