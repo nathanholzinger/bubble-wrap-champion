@@ -24,12 +24,10 @@ const MILESTONES: MilestoneDefinition[] = [
   { trigger: 'oxygen', threshold: 1000000, message: '1,000,000 POPS — BUBBLE WRAP CHAMPION' },
 
   // Sheet count
-  { trigger: 'sheets', threshold: 5, message: '5 SHEETS — FIRST STEPS' },
-  { trigger: 'sheets', threshold: 50, message: '50 SHEETS — PRODUCTIVE' },
-  { trigger: 'sheets', threshold: 500, message: '500 SHEETS — DEDICATED' },
-  { trigger: 'sheets', threshold: 5000, message: '5,000 SHEETS — SHEET MACHINE' },
-  { trigger: 'sheets', threshold: 50000, message: '50,000 SHEETS — SHEET WRAP CHAMPION' },
-  { trigger: 'sheets', threshold: 500000, message: '500,000 SHEETS — SHEET GOD' },
+  { trigger: 'sheets', threshold: 1, message: '1 SHEET — FIRST STEPS' },
+  { trigger: 'sheets', threshold: 5, message: '5 SHEETS — PRODUCTIVE' },
+  { trigger: 'sheets', threshold: 100, message: '100 SHEETS — DEDICATED' },
+  { trigger: 'sheets', threshold: 1000, message: '1,000 SHEETS — SHEET MACHINE' },
 ];
 
 // ── State ────────────────────────────────────────────────────────────────────
