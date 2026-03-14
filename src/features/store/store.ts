@@ -122,11 +122,15 @@ function refresh(): void {
       refs.btn.disabled       = !canAffordTrade(item.id);
 
     } else {
-      const def   = UPGRADES[item.id];
-      const n     = purchaseCount(item.id);
-      const maxed = def.max !== undefined && n >= def.max;
+      const def    = UPGRADES[item.id];
+      const n      = purchaseCount(item.id);
+      const maxed  = def.max !== undefined && n >= def.max;
+      const locked = def.unlocked && !def.unlocked();
       if (maxed) {
         refs.costEl.textContent = 'MAXED';
+        refs.btn.disabled       = true;
+      } else if (locked) {
+        refs.costEl.textContent = 'LOCKED';
         refs.btn.disabled       = true;
       } else {
         const cost = def.cost(n);

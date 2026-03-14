@@ -12,4 +12,5 @@ export const STORE_ITEMS: StoreItem[] = [
   { type: 'action',  id: 'collectSheets', execute: restockSheets },
   { type: 'trade',   id: 'buyWood' },
   { type: 'upgrade', id: 'tableUpgrade' },
+  { type: 'upgrade', id: 'chairUpgrade' },
 ];

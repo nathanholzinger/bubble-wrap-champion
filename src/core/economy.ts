@@ -12,6 +12,7 @@ export function canAffordUpgrade(id: UpgradeId): boolean {
   const def = UPGRADES[id];
   const n   = purchaseCount(id);
   if (def.max !== undefined && n >= def.max) return false;
+  if (def.unlocked && !def.unlocked()) return false;
   return state.resources[def.resource] >= def.cost(n);
 }
 

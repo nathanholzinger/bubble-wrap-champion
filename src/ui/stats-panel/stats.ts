@@ -5,6 +5,7 @@ import { Config } from '../../core/config';
 import { RESOURCES, ResourceId } from '../../core/resources';
 import { updateColors } from '../../features/color/color';
 import { updateTableSize } from '../../features/bubble-sheet/sheet';
+import { updateChairs } from '../../features/chairs/chairs';
 import { formatBigInt } from '../../core/format';
 
 export interface DomRefs {
@@ -69,6 +70,7 @@ export function init(): void {
 // Forces a full UI sync from state — used after save restoration
 export function syncUI(): void {
   updateTableSize();
+  updateChairs();
   updateUI();
   if (state.popped === state.gridTotal) {
     dom.sheetDone.classList.add('show');

@@ -1,0 +1,81 @@
+/* ================================================
+   CHAIRS — top-down pixel art, positioned around .sheet-wrapper
+================================================ */
+
+.chair {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: #6B3E1F;        /* seat face */
+  border-top:    var(--px) solid #8B5533;
+  border-left:   var(--px) solid #8B5533;
+  border-right:  var(--px) solid #2E1A0A;
+  border-bottom: var(--px) solid #2E1A0A;
+  outline: var(--px) solid #3D2209;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Cushion highlight pixel in corner */
+.chair::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #8B5533;
+  opacity: 0.4;
+  top: 8px;
+  left: 8px;
+}
+
+/* Backrest strip — dark bar on the side away from the table */
+.chair::before {
+  content: '';
+  position: absolute;
+  background: #5C3317;
+  outline: var(--px) solid #3D2209;
+}
+
+/* South chair — below table; backrest strip at bottom (far from table) */
+.chair--south {
+  bottom: calc(100% * -1 - 56px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.chair--south::before {
+  bottom: 0; left: 0; right: 0; height: 14px;
+  border-top: var(--px) solid #8B5533;
+}
+
+/* North chair — above table; backrest strip at top (far from table) */
+.chair--north {
+  bottom: calc(100% + 40px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.chair--north::before {
+  top: 0; left: 0; right: 0; height: 14px;
+  border-bottom: var(--px) solid #8B5533;
+}
+
+/* East chair — right of table; backrest strip at right (far from table) */
+.chair--east {
+  left: calc(100% + 40px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.chair--east::before {
+  right: 0; top: 0; bottom: 0; width: 14px;
+  border-left: var(--px) solid #8B5533;
+}
+
+/* West chair — left of table; backrest strip at left (far from table) */
+.chair--west {
+  right: calc(100% + 40px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.chair--west::before {
+  left: 0; top: 0; bottom: 0; width: 14px;
+  border-right: var(--px) solid #8B5533;
+}
