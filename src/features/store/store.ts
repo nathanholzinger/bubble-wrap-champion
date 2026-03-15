@@ -5,7 +5,7 @@ import { TRADES, TradeId } from '../../core/trades';
 import { ACTIONS, ActionId } from '../../core/actions';
 import { buyUpgrade, canAffordUpgrade, executeTrade, canAffordTrade, purchaseCount, tradeCount } from '../../core/economy';
 import { formatBigInt } from '../../core/format';
-import { syncUI } from '../../ui/stats-panel/stats';
+import { syncUI } from '../../ui/resources-panel/resources-panel';
 import { save } from '../../persistence/save';
 import { state } from '../../core/state';
 

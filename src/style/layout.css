@@ -2,9 +2,8 @@
    HEADER
 ================================================ */
 header {
-  width: 100%;
+  padding: 16px 12px 12px;
   text-align: center;
-  padding: 24px 20px 12px;
 }
 
 .title-box {
@@ -33,22 +32,45 @@ h1 {
 ================================================ */
 .game-layout {
   display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  padding: 12px 16px 20px;
-  max-width: 860px;
+  align-items: stretch;
   width: 100%;
-  flex-wrap: wrap;
-  justify-content: center;
+  min-width: 960px; /* 288 + 672 */
+  min-height: calc(100vh - 28px); /* leave room for ticker */
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 25%;
+  width: 25%;
+  min-width: 288px;
+  background: rgb(var(--panel-r), var(--panel-g), var(--panel-b));
+  border-right: var(--px) solid var(--c3);
 }
 
 .game-area {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 14px;
   flex: 1;
-  min-width: 320px;
+  width: 75%;
+  min-width: 672px;
+}
+
+.popping-area {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actions-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px 16px;
 }
 
 /* ================================================
@@ -213,10 +235,8 @@ h1 {
    RESPONSIVE
 ================================================ */
 @media (max-width: 560px) {
-  .bubble { width: 54px; height: 54px; }
-  .bubble-grid { gap: 7px; }
-  .bubble-sheet { padding: 12px; }
-  .stats-panel { flex: 0 0 100%; min-width: unset; }
+  .game-layout { flex-direction: column; }
+  .control-panel { flex: unset; width: 100%; border-right: none; border-bottom: var(--px) solid var(--c3); }
   .panel-body { flex-direction: row; flex-wrap: wrap; }
   .stat-row { flex: 1 0 45%; }
 }

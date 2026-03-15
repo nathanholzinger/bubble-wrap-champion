@@ -1,10 +1,13 @@
 /* ================================================
-   STATS PANEL
+   RESOURCES PANEL
 ================================================ */
-.stats-panel {
+.resources-panel {
   background: rgb(var(--panel-r), var(--panel-g), var(--panel-b));
-  min-width: 200px;
-  flex: 0 0 200px;
+}
+
+.resources-panel .win-titlebar {
+  cursor: pointer;
+  user-select: none;
 }
 
 .panel-body {
@@ -12,6 +15,15 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
+  max-height: 800px;
+  transition: max-height 0.15s steps(6), padding 0.15s steps(6);
+}
+
+.panel-body.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .stat-row { display: flex; flex-direction: column; gap: 3px; }

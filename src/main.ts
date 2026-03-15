@@ -2,10 +2,12 @@ import './style/base.css';
 import './style/layout.css';
 
 import './ui/dev-panel/dev';
-import { init as initUI, syncUI } from './ui/stats-panel/stats';
+import { init as initUI, syncUI } from './ui/resources-panel/resources-panel';
+import { init as initActions } from './ui/actions/actions';
 import { initAutoPoppers } from './features/chairs/autoPopper';
 import { init as initMilestones } from './features/milestones/milestones';
 import { init as initSave, load } from './persistence/save';
+import './features/table/table';
 import { buildSheet, grabNewSheet, restoreBubbles } from './features/bubble-sheet/sheet';
 import { openStore } from './features/store/store';
 import { getCircleClipPath } from './features/bubble-sheet/circleClip';
@@ -29,6 +31,7 @@ async function main(): Promise<void> {
 
   // Register all event listeners before any events can fire
   initUI();
+  initActions();
   initMilestones();
   initSave();
   initAutoPoppers();

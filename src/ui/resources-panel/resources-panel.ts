@@ -1,21 +1,16 @@
-import './stats.css';
+import './resources-panel.css';
 import { state } from '../../core/state';
 import { on } from '../../core/events';
 import { Config } from '../../core/config';
 import { RESOURCES, ResourceId } from '../../core/resources';
 import { updateColors } from '../../features/color/color';
-import { updateTableSize } from '../../features/bubble-sheet/sheet';
+import { syncTable } from '../../features/table/table';
+import { syncActions } from '../actions/actions';
 import { updateChairs } from '../../features/chairs/chairs';
 import { formatBigInt } from '../../core/format';
 
 export interface DomRefs {
-  progFill:  HTMLElement;
-  progText:  HTMLElement;
-  stackBtn:  HTMLButtonElement;
-  storeBtn:  HTMLButtonElement;
-  btnHint:   HTMLElement;
-  sheetDone: HTMLElement;
-  milBar:    HTMLElement;
+  milBar: HTMLElement;
 }
 
 // Per-resource DOM nodes populated during init()
@@ -29,17 +24,16 @@ function getEl(id: string): HTMLElement {
 }
 
 export const dom: DomRefs = {
-  progFill:  getEl('progFill'),
-  progText:  getEl('progText'),
-  stackBtn:  getEl('stackBtn') as HTMLButtonElement,
-  storeBtn:  getEl('storeBtn') as HTMLButtonElement,
-  btnHint:   getEl('btnHint'),
-  sheetDone: getEl('sheetDone'),
-  milBar:    getEl('milestoneBanner'),
+  milBar: getEl('milestoneBanner'),
 };
 
 export function init(): void {
   buildResourceRows();
+
+  const titlebar  = getEl('resourcesTitlebar');
+  const panelBody = getEl('panelBody');
+  titlebar.addEventListener('click', () => panelBody.classList.toggle('collapsed'));
+
 
   on('bubble:popped', ({ x, y }) => {
     updateUI();  // show/update oxygen row before computing particle target rect
@@ -53,34 +47,17 @@ export function init(): void {
     updateUI();
   });
 
-  on('sheet:complete', () => {
-    dom.sheetDone.classList.add('show');
-    updateButtons();
-    updateUI();
-  });
-
-  on('resources:produced', () => { updateUI(); });
-
-  on('stack:restocked', () => {
-    updateButtons();
-  });
-
-  on('sheet:new', () => {
-    dom.sheetDone.classList.remove('show');
-    updateButtons();
-    updateUI();
-  });
+  on('sheet:complete',       () => updateUI());
+  on('resources:produced',   () => updateUI());
+  on('sheet:new',            () => updateUI());
 }
 
 // Forces a full UI sync from state — used after save restoration
 export function syncUI(): void {
-  updateTableSize();
+  syncTable();
+  syncActions();
   updateChairs();
   updateUI();
-  if (state.popped === state.gridTotal) {
-    dom.sheetDone.classList.add('show');
-    updateButtons();
-  }
 }
 
 // ── Internal ─────────────────────────────────────────────────────────────────
@@ -125,28 +102,9 @@ function updateUI(): void {
     }
   }
 
-  const pct = Math.round((state.popped / state.gridTotal) * 100);
-  dom.progFill.style.width = pct + '%';
-  dom.progText.textContent = pct + '%';
-
   updateColors();
 }
 
-function updateButtons(): void {
-  const sheetDone = state.popped === state.gridTotal;
-  const hasSheets = state.sheets.length > 0;
-
-  dom.stackBtn.disabled = !hasSheets || (!state.grabUnlocked && !sheetDone);
-  dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets.length} / ${state.maxStackSize}`;
-
-  dom.storeBtn.disabled = !state.storeUnlocked;
-
-  dom.btnHint.textContent = !state.grabUnlocked && !sheetDone
-    ? 'POP ALL BUBBLES FIRST'
-    : !hasSheets
-      ? 'OUT OF SHEETS — RUN TO STORE'
-      : '';
-}
 
 function flashStat(el: HTMLElement): void {
   el.classList.remove('flash');

@@ -46,13 +46,16 @@ export const state: GameState = {
   bubbles:          [],
 };
 
-// Grid dimensions — driven by table upgrade count, overridable from dev panel
+// Table grid size — driven by table upgrade count, overridable from dev panel
+export function tableGridSize(): number {
+  if (devOverrides.tableSize !== null) return devOverrides.tableSize;
+  return 4 + (state.purchases['tableUpgrade'] ?? 0);
+}
+
+// Default sheet dims for new sheets — currently matches table size
 export function gridDims(): SheetInstance {
-  if (devOverrides.tableSize !== null) {
-    return { cols: devOverrides.tableSize, rows: devOverrides.tableSize };
-  }
-  const n = state.purchases['tableUpgrade'] ?? 0;
-  return { cols: 4 + n, rows: 4 + n };
+  const n = tableGridSize();
+  return { cols: n, rows: n };
 }
 
 // Chair count — driven by purchases, overridable from dev panel

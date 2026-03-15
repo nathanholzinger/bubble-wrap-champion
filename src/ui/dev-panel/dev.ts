@@ -3,8 +3,10 @@ import { getCircleClipPath, GRID_SIZES } from '../../features/bubble-sheet/circl
 import { clearSave } from '../../persistence/save';
 import { state, gridDims } from '../../core/state';
 import { devOverrides } from '../../core/devOverrides';
-import { syncUI, dom } from '../stats-panel/stats';
-import { buildSheet, updateTableSize } from '../../features/bubble-sheet/sheet';
+import { syncUI } from '../resources-panel/resources-panel';
+import { syncActions } from '../actions/actions';
+import { buildSheet } from '../../features/bubble-sheet/sheet';
+import { applyTableSize } from '../../features/table/table';
 import type { ResourceId } from '../../core/resources';
 import { onUpdate } from '../../core/loop';
 import { totalRate, registerProducer } from '../../core/producers';
@@ -25,7 +27,7 @@ function buildDevPanel(): void {
   panel.className = 'dev-panel raised';
   panel.innerHTML = `
     <div class="win-titlebar" id="devTitlebar">
-      <span class="win-title">DEV.EXE</span>
+      <span class="win-title">DEV</span>
       <div class="win-btns"><div class="win-btn"></div></div>
     </div>
     <div class="dev-panel-body" id="devPanelBody">
@@ -88,13 +90,18 @@ function buildDevPanel(): void {
       <div class="stat-divider"></div>
 
       <div class="dev-row">
+        <button class="stack-btn" id="devHighlightAreas">[ HIGHLIGHT AREAS ]</button>
+      </div>
+
+      <div class="dev-row">
         <button class="stack-btn" id="devClearSave">[ CLEAR SAVE ]</button>
       </div>
 
     </div>
   `;
 
-  document.body.appendChild(panel);
+  const controlPanel = document.querySelector('.control-panel') as HTMLElement;
+  controlPanel.appendChild(panel);
 
   // Titlebar collapse toggle
   const titlebar = panel.querySelector('#devTitlebar') as HTMLElement;
@@ -109,6 +116,13 @@ function buildDevPanel(): void {
     valLabel.textContent = v;
     root.style.setProperty('--circle-fidelity', v);
     root.style.setProperty('--bubble-clip', getCircleClipPath(Number(v)));
+  });
+
+  // Highlight areas toggle
+  const highlightBtn = panel.querySelector('#devHighlightAreas') as HTMLButtonElement;
+  highlightBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dev-highlight');
+    highlightBtn.classList.toggle('dev-btn-active');
   });
 
   // Clear save button
@@ -137,7 +151,7 @@ function buildDevPanel(): void {
     const val = parseInt(maxStackInput.value);
     if (val > 0) {
       state.maxStackSize = val;
-      dom.stackBtn.textContent = `[ GRAB NEW SHEET ] ${state.sheets.length} / ${state.maxStackSize}`;
+      syncActions();
     }
   });
 
@@ -157,7 +171,7 @@ function buildDevPanel(): void {
       devOverrides.tableSize = v + 3;
       tableSizeVal.textContent = String(v + 3);
     }
-    updateTableSize();
+    applyTableSize();
 
     // Re-clamp and rebuild sheet if the sheet override is active —
     // table size takes priority, so sheet must not exceed the new table size.

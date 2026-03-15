@@ -10,76 +10,74 @@
 
 <div class="milestone-bar" id="milestoneBanner"></div>
 
-<header>
-  <div class="title-box raised">
-    <h1>&gt;&gt; BUBBLE WRAP CHAMPION &lt;&lt;</h1>
-  </div>
-  <div class="subtitle">OXYGEN AWAITS<span class="blink">_</span></div>
-</header>
-
 <div class="game-layout">
 
-  <!-- Stats Panel -->
-  <div class="stats-panel raised">
-    <div class="win-titlebar">
-      <span class="win-title">STATS.EXE</span>
-      <div class="win-btns"><div class="win-btn"></div><div class="win-btn"></div></div>
+  <!-- Control Panel -->
+  <div class="control-panel">
+
+  <header>
+    <div class="title-box raised">
+      <h1>&gt;&gt; BUBBLE WRAP CHAMPION &lt;&lt;</h1>
     </div>
-    <div class="panel-body">
+    <div class="subtitle">OXYGEN AWAITS<span class="blink">_</span></div>
+  </header>
+
+  <!-- Resources Panel -->
+  <div class="resources-panel raised">
+    <div class="win-titlebar" id="resourcesTitlebar">
+      <span class="win-title">RESOURCES</span>
+    </div>
+    <div class="panel-body" id="panelBody">
 
       <div id="resourceStats"></div>
 
     </div>
   </div>
 
+  </div><!-- /.control-panel -->
+
   <!-- Game Area -->
   <div class="game-area">
 
-    <div class="sheet-wrapper">
-      <div class="table-surface"></div>
-      <div class="stack-bg stack-bg-2"></div>
-      <div class="stack-bg stack-bg-1"></div>
+    <!-- Popping Area -->
+    <div class="popping-area">
+      <div class="table-wrapper">
+        <div class="game-table" id="gameTable">
+          <div class="bubble-sheet raised" id="bubbleSheet">
+            <div class="bubble-grid" id="bubbleGrid"></div>
+          </div>
+          <div class="empty-table" id="emptyTable">
+            <div class="done-title">ALL BUBBLES<br>POPPED!</div>
+            <div class="done-hint">&gt; GRAB NEW SHEET &lt;</div>
+          </div>
+        </div>
+      </div><!-- /.table-wrapper -->
+    </div>
 
-      <div class="bubble-sheet raised" id="bubbleSheet">
-        <div class="sheet-header">&gt; POP ALL 16 BUBBLES</div>
-        <div class="bubble-grid" id="bubbleGrid"></div>
+    <!-- Actions Area -->
+    <div class="actions-area">
 
-        <div class="sheet-done" id="sheetDone">
-          <div class="done-title">ALL BUBBLES<br>POPPED!</div>
-          <div class="done-hint">&gt; GRAB NEW SHEET &lt;</div>
+      <!-- Progress Bar -->
+      <div class="prog-wrap">
+        <div class="prog-labels">
+          <span>&gt; SHEET PROGRESS</span>
+          <span id="progText">0%</span>
+        </div>
+        <div class="prog-track sunken">
+          <div class="prog-fill" id="progFill" style="width:0%"></div>
         </div>
       </div>
-    </div>
 
-    <!-- Progress Bar -->
-    <div class="prog-wrap">
-      <div class="prog-labels">
-        <span>&gt; SHEET PROGRESS</span>
-        <span id="progText">0%</span>
+      <!-- Stack Buttons -->
+      <div class="btn-area">
+        <button class="stack-btn" id="stackBtn" disabled>[ GRAB NEW SHEET ]</button>
+        <button class="stack-btn" id="storeBtn" disabled>[ RUN TO STORE ]</button>
+        <div class="btn-hint" id="btnHint">POP ALL BUBBLES FIRST</div>
       </div>
-      <div class="prog-track sunken">
-        <div class="prog-fill" id="progFill" style="width:0%"></div>
-      </div>
-    </div>
 
-    <!-- Stack Button -->
-    <div class="btn-area">
-      <button class="stack-btn" id="stackBtn" disabled>[ GRAB NEW SHEET ]</button>
-      <button class="stack-btn" id="storeBtn" disabled>[ RUN TO STORE ]</button>
-      <div class="btn-hint" id="btnHint">POP ALL BUBBLES FIRST</div>
     </div>
 
   </div>
-</div>
-
-<!-- Bottom ticker -->
-<div class="ticker">
-  <span class="ticker-inner">
-    * BUBBLE WRAP CHAMPION * &nbsp;&nbsp;&nbsp; POP BUBBLES TO COLLECT OXYGEN &nbsp;&nbsp;&nbsp;
-    COMING SOON: ROXYGEN // GOXYGEN // BLOXYGEN &nbsp;&nbsp;&nbsp;
-    COMPLETE SHEETS FOR MAXIMUM EFFICIENCY &nbsp;&nbsp;&nbsp;
-    * BUBBLE WRAP CHAMPION *
-  </span>
 </div>
 
 <script type="module" src="/src/main.ts"></script>

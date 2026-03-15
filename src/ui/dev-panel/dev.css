@@ -2,11 +2,7 @@
    DEV PANEL
 ================================================ */
 .dev-panel {
-  position: fixed;
-  bottom: 36px; /* sit above the ticker */
-  right: 12px;
-  z-index: 8000;
-  min-width: 240px;
+  min-width: 200px;
   background: var(--panel-bg);
 }
 
@@ -115,6 +111,26 @@
   padding: 3px 5px;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.dev-btn-active {
+  background: var(--c4) !important;
+  color: #e8e800 !important;
+  border-top-color:    var(--c1) !important;
+  border-left-color:   var(--c1) !important;
+  border-right-color:  var(--c6) !important;
+  border-bottom-color: var(--c6) !important;
+}
+
+body.dev-highlight .control-panel,
+body.dev-highlight .game-area,
+body.dev-highlight .popping-area,
+body.dev-highlight .table-wrapper {
+  outline: 2px solid #e8e800;
+}
+
+body.dev-highlight .table-wrapper > * {
+  outline: 2px solid #e8e800;
 }
 
 .dev-add-btn:active {

@@ -13,7 +13,7 @@ const LABELS: Record<ChairPos, string> = {
   west:  'WEST CHAIR',
 };
 
-const wrapper = document.querySelector('.sheet-wrapper') as HTMLElement;
+const tableArea = document.querySelector('.table-wrapper') as HTMLElement;
 const chairEls: Partial<Record<ChairPos, HTMLElement>> = {};
 
 // ── Popup ────────────────────────────────────────────────────────────────────
@@ -108,7 +108,7 @@ export function updateChairs(): void {
     const shouldExist = i < count;
     if (shouldExist && !exists) {
       const el = createChair(pos);
-      wrapper.appendChild(el);
+      tableArea.appendChild(el);
       chairEls[pos] = el;
     } else if (!shouldExist && exists) {
       chairEls[pos]!.remove();

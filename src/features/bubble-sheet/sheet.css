@@ -1,54 +1,10 @@
 /* ================================================
-   SHEET STACK
+   BUBBLE SHEET — sits centered on the table
 ================================================ */
-.sheet-wrapper {
-  position: relative;
-  margin-bottom: 10px;
-  isolation: isolate; /* own stacking context so table-surface z-index: -1 stays visible */
-  display: flex;
-  justify-content: center; /* center sheet horizontally when smaller than table */
-  align-items: flex-start; /* keep sheet anchored to top */
-}
-
-/* Table surface behind everything — grows automatically with the sheet */
-.table-surface {
-  position: absolute;
-  top: -20px;
-  left: -28px;
-  right: -28px;
-  bottom: -36px;
-  z-index: -2;
-  background: #5C3317;
-  border-top:    var(--px) solid #8B5533;
-  border-left:   var(--px) solid #8B5533;
-  border-right:  var(--px) solid #2E1A0A;
-  border-bottom: var(--px) solid #2E1A0A;
-  outline: var(--px) solid #3D2209;
-}
-
-/* Paper stack layers behind sheet */
-.stack-bg {
-  position: absolute;
-  background: var(--c3);
-  outline: var(--px) solid var(--c0);
-  border: var(--px) solid var(--c4);
-}
-.stack-bg-1 { inset: 5px -5px -5px -5px; z-index: 0; }
-.stack-bg-2 { inset: 10px -9px -9px -9px; z-index: -1; background: var(--c2); border-color: var(--c3); }
-
 .bubble-sheet {
   background: rgb(var(--sheet-r), var(--sheet-g), var(--sheet-b));
-  padding: 16px;
+  padding: 12px;
   position: relative;
-  z-index: 2;
-}
-
-.sheet-header {
-  font-size: 0.36rem;
-  letter-spacing: 1.5px;
-  color: var(--text-dim);
-  margin-bottom: 12px;
-  text-align: center;
 }
 
 /* ================================================
@@ -56,7 +12,7 @@
 ================================================ */
 .bubble-grid {
   display: grid;
-  gap: 9px;
+  gap: 8px;
 }
 
 /* ================================================
@@ -154,38 +110,3 @@
   animation: popflash 0.15s steps(3) forwards;
 }
 
-/* ================================================
-   SHEET DONE OVERLAY
-================================================ */
-.sheet-done {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  background: rgba(8,8,8,0.82);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.12s steps(3);
-}
-
-.sheet-done.show { opacity: 1; }
-
-.sheet-done .done-title {
-  font-size: 0.55rem;
-  color: var(--cW);
-  letter-spacing: 1px;
-  text-shadow: var(--px) var(--px) 0 var(--c0);
-  text-align: center;
-  line-height: 2;
-}
-
-.sheet-done .done-hint {
-  font-family: 'VT323', monospace;
-  font-size: 1.1rem;
-  color: var(--c7);
-  letter-spacing: 2px;
-}

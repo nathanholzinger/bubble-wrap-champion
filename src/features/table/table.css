@@ -1,0 +1,53 @@
+/* ================================================
+   GAME TABLE — wooden surface; sized by JS
+================================================ */
+.game-table {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #5C3317;
+  border-top:    var(--px) solid #8B5533;
+  border-left:   var(--px) solid #8B5533;
+  border-right:  var(--px) solid #2E1A0A;
+  border-bottom: var(--px) solid #2E1A0A;
+  outline: var(--px) solid #3D2209;
+}
+
+/* ================================================
+   SHEET DONE OVERLAY
+================================================ */
+.empty-table {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(8,8,8,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s steps(3);
+}
+
+.empty-table.show { opacity: 1; }
+
+.empty-table .done-title {
+  font-size: 0.55rem;
+  color: var(--cW);
+  letter-spacing: 1px;
+  text-shadow: var(--px) var(--px) 0 var(--c0);
+  text-align: center;
+  line-height: 2;
+}
+
+.empty-table .done-hint {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: var(--c7);
+  letter-spacing: 2px;
+}

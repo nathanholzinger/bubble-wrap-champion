@@ -52,7 +52,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--c0); }
+html { background: var(--c0); overflow-x: auto; }
 
 body {
   font-family: 'Press Start 2P', monospace;
