@@ -21,7 +21,7 @@
 .bubble {
   width: 64px;
   height: 64px;
-  background: var(--bubble-face);
+  background: rgb(var(--bubble-r), var(--bubble-g), var(--bubble-b));
   cursor: crosshair;
   position: relative;
   user-select: none;

@@ -54,6 +54,7 @@ h1 {
   flex: 1;
   width: 75%;
   min-width: 672px;
+  background: rgb(var(--game-area-r), var(--game-area-g), var(--game-area-b));
 }
 
 .popping-area {

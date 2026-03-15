@@ -16,12 +16,12 @@
   position: relative;
   width: 128px;
   height: 128px;
-  background: #6B3E1F;        /* seat face */
-  border-top:    var(--px) solid #8B5533;
-  border-left:   var(--px) solid #8B5533;
-  border-right:  var(--px) solid #2E1A0A;
-  border-bottom: var(--px) solid #2E1A0A;
-  outline: var(--px) solid #3D2209;
+  background: rgb(var(--table-r), var(--table-g), var(--table-b));
+  border-top:    var(--px) solid var(--c5);
+  border-left:   var(--px) solid var(--c5);
+  border-right:  var(--px) solid var(--c2);
+  border-bottom: var(--px) solid var(--c2);
+  outline: var(--px) solid var(--c1);
   pointer-events: auto;
   cursor: pointer;
   z-index: 1;
@@ -36,8 +36,8 @@
 .chair::before {
   content: '';
   position: absolute;
-  background: #5C3317;
-  outline: var(--px) solid #3D2209;
+  background: rgb(var(--table-r), var(--table-g), var(--table-b));
+  outline: var(--px) solid var(--c1);
 }
 
 /* South chair — row 3, col 2; gap via margin-top */
@@ -50,7 +50,7 @@
 }
 .chair--south::before {
   bottom: 0; left: 0; right: 0; height: 36px;
-  border-top: var(--px) solid #8B5533;
+  border-top: var(--px) solid var(--c5);
 }
 
 /* North chair — row 1, col 2; gap via margin-bottom */
@@ -63,7 +63,7 @@
 }
 .chair--north::before {
   top: 0; left: 0; right: 0; height: 36px;
-  border-bottom: var(--px) solid #8B5533;
+  border-bottom: var(--px) solid var(--c5);
 }
 
 /* East chair — row 2, col 3; gap via margin-left */
@@ -76,7 +76,7 @@
 }
 .chair--east::before {
   right: 0; top: 0; bottom: 0; width: 36px;
-  border-left: var(--px) solid #8B5533;
+  border-left: var(--px) solid var(--c5);
 }
 
 /* West chair — row 2, col 1; gap via margin-right */
@@ -89,7 +89,7 @@
 }
 .chair--west::before {
   left: 0; top: 0; bottom: 0; width: 36px;
-  border-right: var(--px) solid #8B5533;
+  border-right: var(--px) solid var(--c5);
 }
 
 /* ================================================

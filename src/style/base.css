@@ -14,6 +14,9 @@
   --banner-r: 56; --banner-g: 56; --banner-b: 56; /* matches --c3 */
   --panel-r:  40; --panel-g:  40; --panel-b:  40; /* matches --c2 */
   --sheet-r:  40; --sheet-g:  40; --sheet-b:  40; /* matches --c2 */
+  --table-r:    56; --table-g:    56; --table-b:    56;  /* matches --c3 */
+  --bubble-r:  170; --bubble-g:  170; --bubble-b:  170;
+  --game-area-r: 24; --game-area-g: 24; --game-area-b: 24;  /* matches --c1 */
 
   /* 8-bit greyscale palette — 10 distinct steps */
   --c0: #080808;
